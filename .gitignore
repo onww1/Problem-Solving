@@ -1,0 +1,10 @@
+## Algorithm Ignore File ##
+
+*
+
+!*.c
+!*.cpp
+!*.java
+!*.py
+!*.md
+!.gitignore
