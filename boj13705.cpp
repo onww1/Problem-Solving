@@ -13,6 +13,7 @@ int main(void){
 	scanf("%d %d %d", &A, &B, &C);
 	x = (double)C/(double)A;
 	dx = (double)B/(double)A;
+	
 	while(1){
 		dx /= 2;
 		val = go(x);

@@ -7,6 +7,7 @@ int main(void){
 	int d[1001] = {0, };
 	int dist[1001] = {0, };
 	std::vector<int> adj[1001];
+	dsdofjsdoifjdo;fjoi;ew
 
 	scanf("%d", &t);
 	while(t--){
@@ -39,7 +40,7 @@ int main(void){
 				}
 			}
 		}
-		
+
 		printf("%d\n", max);
 	}
 	return 0;
