@@ -1,4 +1,9 @@
 ## Algorithm Ignore File ##
 
-*.class
-*.exec
+*
+
+!*.c
+!*.cpp
+!*.java
+!*.py
+!*.md
