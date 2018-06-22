@@ -1,3 +1,0 @@
-# Algorithm
-Problem Solving
-gogogo
