@@ -8,3 +8,10 @@
 !*.py
 !*.md
 !.gitignore
+
+!BOJ
+!CodeGround
+!CodingParty
+!ETC
+!SWExpert
+!TestDoc

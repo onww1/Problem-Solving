@@ -1,0 +1,1 @@
+a,c;main(b,n){for(c=scanf("%d",&n);n--;c=(b*2+a)%9901)a=b,b=c;printf("%d",c);}
