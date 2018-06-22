@@ -2,9 +2,9 @@
 
 *
 
-!*.c
-!*.cpp
-!*.java
-!*.py
-!*.md
+!*/*.c
+!*/*.cpp
+!*/*.java
+!*/*.py
+!*/*.md
 !.gitignore
