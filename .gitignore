@@ -1,0 +1,18 @@
+## Algorithm Ignore File ##
+
+*
+
+!*.c
+!*.cpp
+!*.java
+!*.py
+!*.md
+!.gitignore
+
+!BOJ
+!CodeGround
+!CodingParty
+!ETC
+!SWExpert
+!TestDoc
+!SCPC
