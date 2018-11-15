@@ -1,61 +1,56 @@
-#include <cstdio>
-#include <cmath>
+#include <iostream>
 #include <vector>
+using namespace std;
 
-int min(int a, int b){
-	return a<b?a:b;
-}
+typedef long long ll;
 
-int init( std::vector<int> &arr, std::vector<int> &tree, int node, int start, int end ){
-	if( start == end )
-		return tree[node] = arr[start];
+int min(int a, int b) { return a < b ? a : b; }
+ll max(ll a, ll b) { return a > b ? a : b; }
 
-	int mid = ( start + end ) / 2;
+ll solve(vector<ll>& h, int left, int right) {
+	if (left == right) 
+		return h[left];
 
-	return tree[node] = min ( init(arr, tree, node * 2, start, mid) ,
-							  init(arr, tree, node * 2 + 1 , mid + 1, end) ); 
-}
+	int mid = ( left + right ) / 2;
+	ll ret = max(solve(h, left, mid), solve(h, mid+1, right));
 
-int getMin( std::vector<int> &tree, int node, int start, int end, int left, int right ){
-	if( end < left || right < start ) return 1e9;
-	if( left <= start && end <= right ) return tree[node];
+	int lo = mid, hi = mid+1;
+	int minHeight = min(h[lo], h[hi]);
+	ret = max(ret, minHeight * 2LL);
 
-	int mid = ( start + end ) / 2;
-
-	return min( getMin( tree, node * 2, start, mid, left, right ) ,
-				getMin( tree, node * 2 + 1, mid + 1, end, left, right ) );
-}
-
-int main(void){
-	int n, in;
-	long area, max;
-	while(1){
-		scanf("%d", &n);
-		if(!n) break;
-		max = 0l;
-
-		int height = (int)ceil(log2(n));
-		int tree_size = (1 << (height+1));
-
-		std::vector<int> h(n);
-		std::vector<int> tree(tree_size);
-
-		for(int i=0; i<n; i++){
-			scanf("%d", &in);
-			h[i] = in;
+	while (left < lo || hi < right) {
+		if ( hi < right && (lo == left || h[lo-1] < h[hi+1]) ) {
+			hi++;
+			minHeight = min(minHeight, h[hi]);
+		}
+		else {
+			lo--;
+			minHeight = min(minHeight, h[lo]);
 		}
 
-		init( h, tree, 1, 0, n-1 );
+		ret = max(ret, (ll)minHeight * (hi - lo + 1));
+	}
 
-		for(int i=0; i<n; i++){
-			for(int j=i; j<n; j++){
-				area = (long)getMin(tree, 1, 0, n-1, i, j) * (long)(j - i + 1);
-				if( area > max ) max = area;
-			}
-		}
+	return ret;
+}
 
-		printf("%ld\n", max);
-	}	
+int main() {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+
+	int n;
+	vector<ll> h;
+
+	while (true) {
+		cin >> n;
+		if (!n) break;
+
+		h.resize(n);
+		for (int i=0; i<n; i++)
+			cin >> h[i];
+
+		cout << solve(h, 0, n-1) << '\n';
+	}
 
 	return 0;
 }
