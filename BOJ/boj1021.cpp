@@ -1,64 +1,43 @@
-#include <cstdio>
-#include <cstring>
-#include <deque>
-#include <list>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
 
-bool check(int elem, std::deque<int> dq);
+int abs(int a) { return a > 0 ? a : -a; }
 
-int main(void){
+int min(int a, int b) { return a < b ? a : b; }
 
-	// define
-	int n, m, in, num, cnt=0;
-	std::deque<int> dq;
-	std::list<int> dst;
-
-	// initialize
-	scanf("%d %d", &n, &m);
-	for(int i=1; i<=n; i++) dq.push_back(i);
-	for(int i=0; i<m; i++){
-		scanf("%d", &in);
-		dst.push_back(in);
+int find_idx(vector<int>& list, int dst) {
+	int left = -1, right = list.size();
+	while ( left < right ) {
+		int mid = ( left + right ) / 2;
+		if ( list[mid] == dst ) return mid;
+		else if ( list[mid] < dst ) left = mid;
+		else right = mid;
 	}
-
-	// process
-	while(!dst.empty()){
-		num = dst.front();
-		dst.pop_front();
-
-		if(check(num, dq)){
-			while(true){
-				in = dq.front();
-				dq.pop_front();
-				if(num == in) break;
-				else{
-					cnt++;
-					dq.push_back(in);
-				}
-			}
-		} else {
-			while(true){
-				in = dq.back();
-				dq.pop_back();
-				if(num == in) {cnt++; break;}
-				else{
-					cnt++;
-					dq.push_front(in);
-				}
-			}
-		}
-	}
-
-	printf("%d\n", cnt);
-	return 0;
+	return -1;
 }
 
-bool check(int elem, std::deque<int> dq){
-	int len = 0, dqLen = dq.size();
-	auto end = dq.end();
-	for(auto it = dq.begin(); it != end; it++){
-		if(*it == elem) break;
-		else len++;
+int main(int argc, char const *argv[])
+{
+	int N, M;
+	cin >> N >> M;
+
+	vector<int> list(N);
+	for (int i=1; i<=N; i++) list[i-1] = i;
+
+	int sum = 0;
+	int in, p = 0;
+	for (int i=0; i<M; i++) {
+		cin >> in;
+		int idx = find_idx(list, in);
+		int len = list.size();
+		sum += min(abs(idx - p), len - abs(idx - p));
+		p = idx;
+		list.erase(list.begin() + idx);
 	}
-	if( 2*len <= dqLen+1 ) return true;
-	else return false;
+
+	cout << sum << '\n';
+
+	return 0;
 }
