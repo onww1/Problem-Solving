@@ -1,14 +1,13 @@
 #include <iostream>
 #include <queue>
+#include <vector>
 using namespace std;
 
 struct point {
 	int r, c;
 };
 
-int R, C, N;
-int map[300][300] = { 0, };
-int snapshot[300][300];
+int R, C, N, map[300][300];
 
 int move_r[] = {-1, 1, 0, 0};
 int move_c[] = {0, 0, -1, 1};
@@ -18,20 +17,20 @@ bool check(int r, int c) {
 	return true;
 }
 
-int numOfAdjacentZeros(int r, int c) {
+int countZeros(int r, int c) {
 	int cnt = 0;
 	for (int k=0; k<4; k++) {
 		int dr = r + move_r[k];
 		int dc = c + move_c[k];
 
-		if (check(dr, dc) && !snapshot[dr][dc]) 
-			cnt++;
+		if (check(dr, dc) && !map[dr][dc]) cnt++;
 	}
 	return cnt;
 }
 
-int main() {
-	cin.tie(NULL);
+int main(int argc, char const *argv[])
+{
+	cin.tie(0);
 	ios_base::sync_with_stdio(false);
 
 	cin >> R >> C;
@@ -42,55 +41,63 @@ int main() {
 		}
 	}
 
-	bool keepRunning = true;
-	int T = 0;
+	bool keepGoing = true;
 	queue<point> q;
-	for (int i=0; keepRunning && i<R; i++) {
-		for (int j=0; keepRunning && j<C; j++) {
-			if ( N == 0 ) {
-				keepRunning = false;
-				cout << 0 << '\n';
-			}
-			else if ( map[i][j] ) {
-				T++;
-				bool visited[300][300] = { false, };		
-				for (int i=0; i<R; i++) 
-					for (int j=0; j<C; j++) 
-						snapshot[i][j] = map[i][j];
+	vector<point> v;
+	int Time = 0;
 
-				q.push({i, j});
-				visited[i][j] = true;
-				
-				int tot = N;
-				while (!q.empty()) {
-					int r = q.front().r;
-					int c = q.front().c;
-					q.pop();
-					tot--;
+	while (keepGoing) {
+		Time++;
+		if (N == 0) break;
 
-					int dec = numOfAdjacentZeros(r, c);
-					if ( map[r][c] - dec <= 0 ) N--;
-					map[r][c] = ( map[r][c] - dec <= 0 ? 0 : map[r][c] - dec );
+		bool visited[300][300] = { false, };
+		bool loop = true;
+		for (int i=0; loop && i<R; i++) {
+			for (int j=0; loop && j<C; j++) {
+				if (!visited[i][j] && map[i][j]) {
+					visited[i][j] = true;
+					q.push({i, j});
 
-					for (int k=0; k<4; k++) {
-						int dr = r + move_r[k];
-						int dc = c + move_c[k];
+					int remain = N;
+					while (!q.empty()) {
+						int r = q.front().r;
+						int c = q.front().c;
+						q.pop();
+						remain--;
 
-						if (check(dr, dc) && !visited[dr][dc] && snapshot[dr][dc]) {
-							visited[dr][dc] = true;
-							q.push({dr, dc});
+						int zeros = countZeros(r, c);
+						if (map[r][c] - zeros <= 0) v.push_back({r, c});
+						else map[r][c] -= zeros;
+
+						for (int k=0; k<4; k++) {
+							int dr = r + move_r[k];
+							int dc = c + move_c[k];
+
+							if (check(dr, dc) && !visited[dr][dc] && map[dr][dc]) {
+								visited[dr][dc] = true;
+								q.push({dr, dc});
+							}
 						}
 					}
-				}
 
-				if (tot > 0) {
-					keepRunning = false;
-					cout << (T - 1) << '\n';
+					if (remain > 0) {
+						loop = false;
+						keepGoing = false;
+					}
+					else {
+						int len = v.size();
+						N -= len;
+						for (int k=0; k<len; k++)
+							map[v[k].r][v[k].c] = 0;
+						v.clear();
+					}
 				}
-
 			}
 		}
 	}
+
+	if (N == 0) cout << 0 << '\n';
+	else cout << (Time - 1) << '\n';
 
 	return 0;
 }

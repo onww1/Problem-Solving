@@ -1,114 +1,93 @@
-#include <cstdio>
-#include <cstdlib>
+#include <iostream>
 #include <queue>
-#include <utility>
+using namespace std;
 
-int n;
-int map[100][100] = {0, };
-int visited[100][100] = {0, };
-int region[100][100] = {0, };
-int dx[4] = {1, -1, 0, 0};
-int dy[4] = {0, 0, 1, -1};
+struct point {
+	int r, c, t;
+};
 
-int boundaryCheck(int row, int col){
-	if(row < 0 || row >= n || col < 0 || col >= n) return 0;
-	return 1;
+int N, map[100][100];
+bool visited[100][100] = {false, };
+
+int move_r[] = {-1, 1, 0, 0};
+int move_c[] = {0, 0, -1, 1};
+
+bool check(int r, int c) {
+	if (r < 0 || r >= N || c < 0 || c >= N) return false;
+	return true;
 }
 
-int main(void){
-	int num = 1;
-	scanf("%d", &n);
-	for(int i=0; i<n; i++){
-		for(int j=0; j<n; j++){
-			scanf("%d", &map[i][j]);
-		}
-	}
+int main(int argc, char const *argv[])
+{
+	cin.tie(0);
+	ios_base::sync_with_stdio(false);
 
-	std::queue< std::pair<int,int> > q;
+	cin >> N;
+	for (int i=0; i<N; i++) 
+		for (int j=0; j<N; j++)
+			cin >> map[i][j];
 
-	// numbering
-	for(int i=0; i<n; i++){
-		for(int j=0; j<n; j++){
-			if(visited[i][j] || !map[i][j]) continue;
-			if(map[i][j]){
-				q.push( std::make_pair(i, j) );
-				visited[i][j] = 1;
-				region[i][j] = num;
-			}
-			while(!q.empty()){
-				int row = q.front().first;
-				int col = q.front().second;
-				q.pop();
+	int num = 0;
+	queue<point> q, tq;
+	for (int i=0; i<N; i++) {
+		for (int j=0; j<N; j++) {
+			if (!visited[i][j] && map[i][j]) {
+				num++;
+				map[i][j] = num * 1000;
+				visited[i][j] = true;
+				q.push({i, j, 0});
+				tq.push({i, j, 0});
 
-				for(int k=0; k<4; k++){
-					if( boundaryCheck(row + dx[k], col + dy[k])
-					 && !visited[row + dx[k]][col + dy[k]]
-					 && map[row + dx[k]][col + dy[k]]){
-						q.push( std::make_pair(row + dx[k], col + dy[k]) );
-						visited[row + dx[k]][col + dy[k]] = 1;
-						region[row + dx[k]][col + dy[k]] = num;
-					}
-				}
-			}
-			num++;
-		}
-	}
+				while(!q.empty()) {
+					int r = q.front().r;
+					int c = q.front().c;
+					q.pop();
 
-	// reset the visited array
-	for(int i=0; i<n; i++) for(int j=0; j<n; j++) visited[i][j] = 0;
-	
-	// find contours
-	for(int i=0; i<n; i++){
-		for(int j=0; j<n; j++){
-			if(map[i][j] && map[i][j] != -1){
-				visited[i][j] = 1;
-				for(int k=0; k<4; k++){
-					if( boundaryCheck(i + dx[k], j + dy[k])
-					 && !map[i + dx[k]][j + dy[k]] 
-					 && !visited[i + dx[k]][j + dy[k]]){
-						q.push( std::make_pair(i + dx[k], j + dy[k]) );
-						visited[i + dx[k]][j + dy[k]] = 1;
-						region[i + dx[k]][j + dy[k]] = region[i][j];
-						map[i + dx[k]][j + dy[k]] = -1;
-					}
-					if(visited[i + dx[k]][j + dy[k]] && region[i + dx[k]][j + dy[k]] != region[i][j]){
-						printf("%d\n", 1);
-						exit(0);
+					for (int k=0; k<4; k++) {
+						int dr = r + move_r[k];
+						int dc = c + move_c[k];
+
+						if (check(dr, dc) && !visited[dr][dc] && map[dr][dc]) {
+							visited[dr][dc] = true;
+							map[dr][dc] = num * 1000;
+							q.push({dr, dc, 0});
+							tq.push({dr, dc, 0});
+						}
 					}
 				}
 			}
 		}
 	}
 
-	for(int i=0; i<n; i++) for(int j=0; j<n; j++) if(map[i][j] == -1) map[i][j] = 1;
+	bool isEnded = false;
+	int dist = 10000;
+	while (!tq.empty()) {
+		int r = tq.front().r;
+		int c = tq.front().c;
+		int t = tq.front().t;
+		tq.pop();
 
-	// calculate mininum length of bridge
-	int cnt = 1;
-	while(!q.empty()){
-		cnt++;
-		int qSize = q.size();
-		for(int i=0; i<qSize; i++){
-			int row = q.front().first;
-			int col = q.front().second;
-			int reg = region[row][col];
-			q.pop();
+		for (int k=0; k<4; k++) {
+			int dr = r + move_r[k];
+			int dc = c + move_c[k];
 
-			for(int k=0; k<4 && boundaryCheck(row + dx[k], col + dy[k]); k++){
-				if( !visited[row + dx[k]][col + dy[k]]){
-					q.push( std::make_pair(row + dx[k], col + dy[k]) );
-					visited[row + dx[k]][col + dy[k]] = 1;
-					map[row + dx[k]][col + dy[k]] = cnt;
-					region[row + dx[k]][col + dy[k]] = region[row][col];
+			if (check(dr, dc)) {
+				if (visited[dr][dc] && map[r][c]/1000 != map[dr][dc]/1000) {
+					int tmp = (map[r][c] % 1000) + (map[dr][dc] % 1000);
+					dist = tmp < dist ? tmp : dist;
+					isEnded = true;
+					break;
 				}
-				if(visited[row + dx[k]][col + dy[k]] && region[row + dx[k]][col + dy[k]] != region[row][col]){
-					printf("%d\n", map[row + dx[k]][col + dy[k]] + cnt - 1);
-					exit(0);
+				else if (!visited[dr][dc]) {
+					visited[dr][dc] = true;
+					map[dr][dc] = map[r][c] + 1;
+					if (!isEnded) tq.push({dr, dc, t+1});
 				}
 			}
 		}
-
-		cnt++;
 	}
+
+	cout << dist << '\n';
 
 	return 0;
 }
