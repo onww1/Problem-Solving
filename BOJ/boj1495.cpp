@@ -1,31 +1,33 @@
 #include <iostream>
-#include <vector>
-#include <cstdlib>
 using namespace std;
 
-int cache[100] = {0, };
+int N, S, M, V;
+bool DP[100][1001] = {false, };
 
-int adjust(vector<int>& V, int S, int T, int M) {
-
-	if (S < 0 || S > M) return -1;
-
-	if (cache[S] )
-}
-
-int main() {
-	cin.tie(NULL);
+int main(int argc, char const *argv[])
+{
+	cin.tie(0);
 	ios_base::sync_with_stdio(false);
 
-	int N, S, M;
-	vector<int> V(100);
+	cin >> N >> S >> M >> V;
+	if (S - V >= 0) DP[0][S-V] = true;
+	if (S + V <= M) DP[0][S+V] = true;
+	for (int i=1; i<N; i++) {
+		cin >> V;
+		for (int j=0; j<=M; j++) {
+			if (j - V >= 0 && DP[i-1][j])
+				DP[i][j-V] = true;
+			if (j + V <= M && DP[i-1][j])
+				DP[i][j+V] = true;
+		}
+	}
 
-	cin >> N >> S >> M;
-	for (int i=0; i<S; i++) 
-		cin >> V[i];
+	int MAX = -1;
+	for (int i=0; i<=M; i++) {
+		if (DP[N-1][i])
+			MAX = i > MAX ? i : MAX;
+	}
 
-	memset(cache, -1, sizeof(cache));
-	int max = adjust(V, S, 0, M);
-	cout << max << '\n';
-
+	cout << MAX << '\n';
 	return 0;
 }

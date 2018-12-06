@@ -1,31 +1,27 @@
 #include <iostream>
-#include <algorithm>
+#include <cstring>
+#define INF 0b0111'1111'0111'1111'0111'1111'0111'1111
 using namespace std;
 
-int main() {
-	cin.tie(NULL);
+int main(int argc, char const *argv[])
+{
+	cin.tie(0);
 	ios_base::sync_with_stdio(false);
 
-	int N, K, V[101] = { 0, }, dp[10001] = { 0, };
-
+	int N, K, x, DP[10001];
 	cin >> N >> K;
-	for (int i = 1; i <= N; i++) {
-		cin >> V[i];
-		int step = 1;
-		for(int j = 1; j <= K; j += step) {
-			if( j % V[i] == 0 ) {
-				int tmp = j / V[i];
-				if( dp[j] != 0 && dp[j] < tmp ) break;
-				dp[j] = tmp;
-				step = V[i];
-			}
+
+	memset(DP, 127, sizeof(int) * (K+1));
+	DP[0] = 0;
+	for (int i=0; i<N; i++) {
+		cin >> x;
+		for (int j=0; j<=K-x; j++) {
+			if (DP[j + x] > DP[j] + 1)
+				DP[j + x] = DP[j] + 1;
 		}
 	}
 
-	sort(V, V+N);
+	cout << (DP[K] == INF ? -1 : DP[K]) << '\n';
 
-	for(int i=1; i<=K; i++)
-		cout << i << "\t" << dp[i] << '\n';
-	
 	return 0;
 }
