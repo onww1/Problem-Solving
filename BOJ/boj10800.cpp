@@ -1,6 +1,18 @@
 #include <iostream>
 using namespace std;
 
+struct player {
+	int idx, color, size, sum;
+}
+
+bool cmpByIdx(player a, player b) {
+	return a.idx < b.idx;
+}
+
+bool cmpBySize(player a, player b) {
+	return a.
+}
+
 int main(int argc, char const *argv[])
 {
 	int n, color[200000], size[200000], sum[200000];
