@@ -14,11 +14,17 @@
 !*.md
 
 # except directories
+!BOJ
 !BOJ/problems
 !BOJ/contest_*
 
+!CodeForces
 !CodeForces/contest_*
+
+!Koitp
 !Koitp/test_*
+
+!LINE
 !LINE/test_*
 
 !CodeGround
