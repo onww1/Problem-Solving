@@ -1,21 +1,29 @@
 ## Algorithm Ignore File ##
 
+# all type
 *
 
+# except .gitignore
+!.gitignore
+
+# except c, cpp, java, py, md files
 !*.c
 !*.cpp
 !*.java
 !*.py
 !*.md
-!.gitignore
 
-!BOJ
+# except directories
+!BOJ/problems
+!BOJ/contest_*
+
+!CodeForces/contest_*
+!Koitp/test_*
+!LINE/test_*
+
 !CodeGround
-!CodeForces
 !CodingParty
-!ETC
 !SWExpert
 !TestDoc
 !SCPC
-!Koitp
-!LINE
+!ETC
