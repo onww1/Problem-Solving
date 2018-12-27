@@ -1,25 +1,26 @@
 #include <iostream>
 #include <string>
-#include <cstdlib>
 using namespace std;
 
 struct list {
 	char c;
 	list *prev, *next;
+
+	list(): c(0), prev(nullptr), next(nullptr){}
+	list(char _c): c(_c), prev(nullptr), next(nullptr){}
 };
 
 void printList(list *head) {
 	list *ptr = head;
-	while (ptr->next->c != 0) {
-		ptr = ptr->next;
+	while (ptr->c != 0) {
 		cout << ptr->c;
+		ptr = ptr->next;
 	}
 	cout <<'\n';
 }
 
 void addNode(char c, list *cur) {
-	list* newNode = (list*)malloc(sizeof(list));
-	newNode->c = c;
+	list* newNode = new list(c);
 	newNode->next = cur;
 	newNode->prev = cur->prev;
 	cur->prev->next = newNode;
@@ -31,7 +32,7 @@ void deleteNode(list *cur) {
 	list *deletedNode = cur->prev;
 	cur->prev->prev->next = cur;
 	cur->prev = cur->prev->prev;
-	free(deletedNode);
+	delete deletedNode;
 }
 
 int main(int argc, char const *argv[])
@@ -42,22 +43,20 @@ int main(int argc, char const *argv[])
 	string input;
 	cin >> input;
 
-	list *head = (list*)malloc(sizeof(list));
-	list *tail = (list*)malloc(sizeof(list));
+	list *head = new list;
+	list *tail = new list;
 	head->next = tail;
 	tail->prev = head;
 
-	list *ptr = tail;
-
-	int len = input.length();
+	int len = input.size();
 	for (int i=0; i<len; i++) {
-		addNode(input[i], ptr);
+		addNode(input[i], tail);
 	}
 
-	fflush(stdout);
 	int N;
 	cin >> N;
 	char op, c;
+	list *ptr = tail;
 	for (int i=0; i<N; i++) {
 		cin >> op;
 		if (op == 'L') {
@@ -65,7 +64,7 @@ int main(int argc, char const *argv[])
 				ptr = ptr->prev;
 		}
 		else if (op == 'D') {
-			if (ptr->next != NULL)
+			if (ptr->next != nullptr)
 				ptr = ptr->next;
 		}
 		else if (op == 'B') {
@@ -77,11 +76,11 @@ int main(int argc, char const *argv[])
 		}
 	}
 
-	printList(head);
+	printList(head->next);
 	ptr = tail;
 	while (ptr->prev != head)
 		deleteNode(ptr);
-	free(head);
-	free(tail);
+	delete head;
+	delete tail;
 	return 0;
 }

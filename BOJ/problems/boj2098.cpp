@@ -1,47 +1,32 @@
-#include <iostream>
-#include <vector>
+#include <cstdio>
+#define INF 987654321
 using namespace std;
 
-int N;
-int dist[16][16];
+int cache[16][1 << 16];
+int n, w[16][16];
 
-int shortestPath(vector<int>& path, vector<bool>& visited, int currentLength) {
-	if(path.size() == N)
-		return currentLength + dist[path.back()][0];
+int get_min(int a, int b) { return a < b ? a : b; }
 
-	int ret = 987654321;
-	for (int next = 0; next < N; next++) {
-		if (visited[next]) continue;
-		int here = path.back();
-		path.push_back(next);
-		visited[next] = true;
-		int cand = shortestPath(path, visited, currentLength + dist[here][next]);
-		ret = cand < ret ? cand : ret;
-		visited[next] = false;
-		path.pop_back();
+int solve(int cur, int visited) {
+	if (visited == (1 << n) - 1) {
+		if (w[cur][0] == 0) return INF;
+		return w[cur][0];
+	}
+
+	int &ret = cache[cur][visited];
+	if (ret != 0) return ret;
+	ret = INF;
+	for (int next = 1; next < n; ++next) {
+		if (visited & (1 << next)) continue;
+		if (w[cur][next] == 0) continue;
+		ret = get_min(ret, solve(next, visited | (1 << next)) + w[cur][next]);
 	}
 	return ret;
 }
 
-int main(int argc, char const *argv[])
-{
-	cin.tie(NULL);
-	ios_base::sync_with_stdio(false);
-
-	cin >> N;
-	for (int i=0; i<N; i++) {
-		for (int j=0; j<N; j++) {
-			cin >> dist[i][j];
-		}
-	}
-
-	vector<int> path;
-	vector<bool> visited(N);
-
-	path.push_back(0);
-	visited[0] = true;
-	int min = shortestPath(path, visited, 0);
-	cout << min << '\n';
-
+int main(int argc, char *argv[]) {
+	scanf("%d", &n);
+	for (int i=0; i<n; ++i) for (int j=0; j<n; ++j) scanf("%d", &w[i][j]);
+	printf("%d\n", solve(0, 1));
 	return 0;
 }
