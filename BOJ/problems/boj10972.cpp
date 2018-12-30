@@ -1,3 +1,7 @@
+/*
+ *  just implementation
+ */
+
 #include <cstdio>
 #include <vector>
 using namespace std;
@@ -43,6 +47,10 @@ int main(int argc, char *argv[]) {
   printf("\n");
   return 0;
 }
+
+/*
+ *  using next_permutation
+ */
 
 // #include <cstdio>
 // #include <algorithm>
