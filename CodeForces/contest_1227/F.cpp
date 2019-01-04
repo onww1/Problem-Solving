@@ -1,113 +1,69 @@
-#include <iostream>
+#include <cstdio>
 #include <cstring>
-#include <vector>
 #include <queue>
+#include <algorithm>
 using namespace std;
 
 typedef long long ll;
 
-struct offer {
-  int u, v;
-  ll val;  
+struct offer { 
+  int u, v; 
+  ll w;
 };
 
 bool operator<(offer a, offer b) {
-  return a.val > b.val;
+  return a.w > b.w;
 }
 
+int pa[200001];
 ll a[200001];
-ll len[200001];
-ll sum;
+
+int find_(int a) {
+  if (pa[a] < 0) return a;
+  else return pa[a] = find_(pa[a]);
+}
+
+void union_(int a, int b) {
+  int x = find_(a);
+  int y = find_(b);
+  if (x == y) return;
+  pa[x] = y;
+}
 
 int main(int argc, char *argv[]) {
-  cin.tie(0);
-  ios_base::sync_with_stdio(false);
+  int n, m, x, y, i, idx = 1;
+  ll w, ans = 0;
+  priority_queue<offer> pq;
 
-  int n, m;
-  cin >> n >> m;
+  scanf("%d %d", &n, &m);
+  memset(pa, -1, sizeof(int) * (n + 1));
+  for (i = 1; i <= n; ++i) {
+    scanf("%lld", &a[i]);
+    if (a[idx] > a[i]) idx = i;
+  }
 
-  int min_idx = 0;
-  ll min = 1LL << 60;
-  for (int i=1; i<=n; ++i) {
-    cin >> a[i];
-    if (a[i] < min) {
-      min = a[i];
-      min_idx = i;
+  for (i = 1; i <= n; ++i) {
+    if (i != idx) pq.push({idx, i, a[i] + a[idx]});
+  }
+
+  for (i = 0; i < m; ++i) {
+    scanf("%d %d %lld", &x, &y, &w);
+    pq.push({x, y, w});
+  }
+
+  for (i = 0; i < n-1; ) {
+    x = pq.top().u;
+    y = pq.top().v;
+    w = pq.top().w;
+    pq.pop();
+
+    if (find_(x) != find_(y)) {
+      ++i;
+      ans += w;
+      union_(x, y);
     }
   }
 
-  for (int i=1; i<=n; ++i) {
-    if (i != min_idx) {
-      sum += (a[i] + min);
-      len[i] = a[i] + min;
-    }
-  }
-  
-  ll changed[200001] = {0LL};
-  int x, y; ll w, max_val;
-  for (int i=0; i<m; ++i) {
-    cin >> x >> y >> w;
-    if (changed[x] && changed[y]) {
-      if (changed[x] > changed[y]) {
-        if (changed[x] > w) {
-          sum -= (changed[x] - w);
-          changed[x] = w;
-        }
-      } else {
-        if (changed[y] > w) {
-          sum -= (changed[y] - w);
-          changed[y] = w;
-        }
-      }
-    }
-    else if (changed[x]) {
-      if (changed[x] > a[y] + min) {
-        if (changed[x] > w) {
-          sum -= (changed[x] - w);
-          changed[x] = w;
-        }
-      } else {
-        if (a[y] + min > w) {
-          sum -= (a[y] + min - w);
-          changed[y] = w;
-        }
-      }
-    } 
-    else if (changed[y]) {
-      if (changed[y] > a[x] + min) {
-        if (changed[y] > w) {
-          sum -= (changed[y] - w);
-          changed[y] = w;
-        }
-      } else {
-        if (a[x] + min > w) {
-          sum -= (a[x] + min - w);
-          changed[x] = w;
-        }
-      }
-    } 
-    else {
-      if (a[x] > a[y]) {
-        if (a[x] + min > w) {
-          sum -= (a[x] + min - w);
-          changed[x] = w;
-        }
-      } else {
-        if (y == min_idx) {
-          if (a[x] + min + w) {
-            sum -= (a[x] + min - w);
-            changed[x] = w;
-          }
-        } else {
-          if (a[y] + min > w) {
-            sum -= (a[y] + min - w);
-            changed[y] = w;
-          }
-        }
-      }
-    }
-  }
-
-  cout << sum << '\n';
+  printf("%lld\n", ans);
   return 0;
 }
