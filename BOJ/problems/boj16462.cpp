@@ -1,43 +1,34 @@
-#include <iostream>
-#include <string>
+#include <cstdio>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <algorithm>
+#include <map>
+#define MOD 1000000007LL
+#define INF 1023456789LL
 using namespace std;
 
-int parse(string score) {
-	int ret = 0, len = score.length();
-	if (len == 3) return 100;
-	else if (len == 2) {
-		if (score[0] == '0' || score[0] == '6')
-			ret += 90;
-		else ret += (score[0] - '0') * 10;
+typedef long long ll;
+typedef double db;
 
-		if (score[1] == '0' || score[1] == '6')
-			ret += 9;
-		else ret += (score[1] - '0');
-	}
-	else if (len == 1) {
-		if (score[0] == '0' || score[0] == '6')
-			ret += 9;
-		else ret += (score[0] - '0');
-	}
-	return ret;
-}
+int main(int argc, char *argv[]) {
+    char q[4];
+		int n, s = 0, d, i, j;
 
-int main(int argc, char const *argv[])
-{
-	cin.tie(0);
-	ios_base::sync_with_stdio(false);
+		scanf("%d", &n);
+		for (i = 0; i < n; ++i) {
+			scanf("%s", q);
+			d = 0;
+			for (j = 0; q[j]; ++j) {
+				d *= 10;
+				if (q[j] == '0' || q[j] == '6') d += 9;
+				else d += (q[j] - '0');
+			}
+			if (d > 100) d = 100;
+			s += d;
+		} 
 
-	int N, sum = 0;
-	string score;
-	cin >> N;
-
-	for (int i=0; i<N; i++) {
-		cin >> score;
-		sum += parse(score);
-	} 
-
-	cout << fixed;
-	cout.precision(0);
-	cout << ((double)sum / N) << '\n';
-	return 0;
+		if (2 * (s % n) >= n) return !printf("%d\n", s/n + 1);
+		else return !printf("%d\n", s/n);
 }
