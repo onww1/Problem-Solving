@@ -43,3 +43,4 @@ int main(int argc, char *argv[]) {
   solve(1, 0);
   return !printf("%d\n", mx);
 }
+

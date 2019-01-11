@@ -7,7 +7,7 @@
 using namespace std;
 
 vector <int> edges[100050];
-int dp[100050][11];
+int dp[100050][18];
 
 int solve(int node, int parent, int color) {
   int &ret = dp[node][color];
@@ -16,7 +16,7 @@ int solve(int node, int parent, int color) {
   for (auto it : edges[node]) {
     if (it == parent) continue;
     int val = INF;
-    for (int c = 1; c <= 10; ++c) {
+    for (int c = 1; c <= 17; ++c) {
       if (c == color) continue;
       val = min(val, solve(it, node, c));
     }
@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
     edges[v].push_back(u);
   }
   memset(dp, -1, sizeof(dp));
-  for (i = 1; i <= 10; ++i) {
+  for (i = 1; i <= 17; ++i) {
     ans = min(ans, solve(1, 0, i));
   }
   return !printf("%d\n", ans);
