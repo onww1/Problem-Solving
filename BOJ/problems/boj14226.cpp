@@ -1,45 +1,24 @@
-#include <iostream>
+#include <cstdio>
 #include <cstring>
+#include <algorithm>
+#define INF 0x7f7f7f7f
 using namespace std;
+int dp[1050][1050], s, i, j;
 
-int map[1001], S;
-
-bool check(int pos) {
-	if (pos < 0 || pos > 1000) return false;
-	return true;
+int solve(int now, int clip) {
+	if (now > 1020 || now < 1 || clip > s) return INF;
+	if (now == s) return 0;
+	int &ret = dp[now][clip];
+	if (ret != -1) return ret;
+	ret = INF;
+	ret = min(ret, solve(now, now) + 1);
+	ret = min(ret, solve(now + clip, clip) + 1);
+	ret = min(ret, solve(now - 1, clip) + 1);
+	return ret;
 }
 
-void solve(int pos, int clip) {
-	if (check(pos + clip) && map[pos + clip] > map[pos] + 1) {
-		map[pos + clip] = map[pos] + 1;
-		solve(pos + clip, clip);
-	}
-
-	if (check(pos - 1) && map[pos - 1] > map[pos] + 1) {
-		map[pos - 1] = map[pos] + 1;
-		solve(pos - 1, clip);
-	}
-
-	clip = pos;
-	if (check(pos + clip) && map[pos + clip] > map[pos] + 2) {
-		map[pos + clip] = map[pos] + 2;
-		solve(pos + clip, clip);
-	}
-
-	if (check(pos - 1) && map[pos - 1] > map[pos] + 2) {
-		map[pos - 1] = map[pos] + 2;
-		solve(pos - 1, clip);
-	}
-}
-
-int main(int argc, char const *argv[])
-{
-	memset(map, 127, 1001 * sizeof(int));
-	map[0] = 1; map[1] = 0;
-
-	cin >> S;
-	solve(1, 0);
-
-	cout << map[S] << '\n';
-	return 0;
+int main(int argc, char *argv[]) {	
+	scanf("%d", &s);
+	memset(dp, -1, sizeof(dp));
+	return !printf("%d\n", solve(1, 0));
 }

@@ -1,39 +1,28 @@
-#include <iostream>
-#include <vector>
+#include <cstdio>
 using namespace std;
+typedef long long ll;
 
-int main() {
-  cin.tie(0);
-  ios_base::sync_with_stdio(false);
+const int MAX = 1e6;
+int xcnt[MAX + 1], ycnt[MAX + 1];
+bool noPrime[MAX + 1] = { true, true, };
 
-  bool isPrime;
-  vector<long long> prime;
-  prime.push_back(2);
-  for (long long i=3; i<1000000; i+=2) {
-    isPrime = true;
-    for (long long j=0; prime[j] * prime[j] <= i; ++j) {
-      if (i % prime[j] == 0) {
-        isPrime = false;
-        break;
-      }
+int main(int argc, char *argv[]) {
+  for (int i = 2; i < MAX; ++i) {
+    if (noPrime[i]) {
+      xcnt[i] = xcnt[i-1];
+      ycnt[i] = ycnt[i-1];
+      continue;
     }
-    if (isPrime) prime.push_back(i);
+    xcnt[i] = xcnt[i-1] + 1;
+    ycnt[i] = ycnt[i-1] + (i == 2 || (i - 1) % 4 == 0 ? 1 : 0);
+    for (ll j = (ll)i * i; j < MAX; j += i) noPrime[j] = true; 
   }
 
-  long long L, U, x, y;
-  while (1) {
-    cin >> L >> U;
-    if (L == -1 && U == -1) break;
-    x = y = 0;
-
-    for (int i=0; i<prime.size(); ++i) {
-      if (L <= prime[i] && prime[i] <= U) {
-        ++x;
-        if ((prime[i] - 1) % 4 == 0) ++y;
-      } else if (prime[i] > U) break;
-    }
-    cout << L << ' ' << U << ' ' << x << ' ' << y << '\n';
+  for (int x, y; scanf("%d %d", &x, &y), x != -1 || y != -1;) {
+    printf("%d %d ", x, y);
+    if (y <= 0) x = y = 1;
+    else if (x <= 0) x = 1;
+    printf("%d %d\n", xcnt[y] - xcnt[x-1], ycnt[y] - ycnt[x-1]);
   }
-
   return 0;
 }
