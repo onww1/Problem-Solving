@@ -6,10 +6,7 @@ int a[15000], cnt;
 int main(int argc, char *argv[]) {
   int n, m, in, i;
   scanf("%d %d", &n, &m);
-  for (i = 0; i < n; ++i) {
-    scanf("%d", &in);
-    a[i] = in;
-  }
+  for (i = 0; i < n; ++i) scanf("%d", a + i);
   sort(a, a+n);
 
   int s = 0, e = n-1;
