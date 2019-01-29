@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
           if (k == len / 2) found = true;
           // vertical
           for (k = 0; k < len / 2; ++k) 
-            if (map[i + k][j] != map[i + len - 1 - k][j]) break;
+            if (map[j + k][i] != map[j + len - 1 - k][i]) break;
           if (k == len / 2) found = true;
         }
       }
