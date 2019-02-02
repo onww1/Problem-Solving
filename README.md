@@ -1,6 +1,6 @@
 # Problem-Solving
-* Online Judge 사이트의 알고리즘 문제를 푼 것을 정리
-* 개인적으로 구현한 자료구조, 알고리즘을 정리
+* Online Judge 사이트의 알고리즘 문제를 푼 것을 정리.
+* 개인적으로 구현한 자료구조, 알고리즘을 정리.
   
 * Directory 소개
   * BOJ : [Baekjoon Online Judge](https://www.acmicpc.net)
