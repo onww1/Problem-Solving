@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
   while (s < e) {
     m = (s + e) / 2;
     if (solve(m)) s = m + 1;   // 성공 시, 랜선의 길이를 더 늘려봄.
-    else e = m;   // 실패 시, 랜선의 길이를 줄임.
+    else e = m;   // 실패 시, 랜선의 길이를 줄임.ㄴ
   }
   return !printf("%d\n", solve(s) ? s : s - 1);
 }
