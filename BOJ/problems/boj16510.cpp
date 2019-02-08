@@ -1,7 +1,18 @@
+/*
+ *  BOJ 16510. Predictable Queue
+ * 
+ *  시간 복잡도 : O(mlogn)
+ *  공간 복잡도 : O(n)
+ * 
+ *  처음 일부터 시작해서 걸리는 시간을 부분합으로 전처리를 해두고, 
+ *  주어지는 값에 대해서 이분탐색을 통해 위치를 찾아서 일의 갯수를 출력했습니다.
+ */
+
 #include <cstdio>
 using namespace std;
 typedef long long ll;
 
+// Fast IO
 const int BS = 1 << 17;
 char buf[BS];
 inline char read() {
@@ -32,7 +43,10 @@ const int MAX = 2e5;
 ll a[MAX + 5];
 int main(int argc, char *argv[]) {
   int n = readInt(), m = readInt(), i, t;
+  // 부분합 계산
   for (i = 1; i <= n; ++i) a[i] = readInt(), a[i] += a[i-1];
+
+  // 각각의 t에 대해서 이분탐색으로 일의 수를 결정.
   for (i = 0; i < m; ++i) {
     t = readInt();
     int s = 1, e = n + 1, mid;
