@@ -5,7 +5,7 @@
 using namespace std;
 const int MAX = 1e5;
 
-set <int> used_prime;
+set <int> used;
 vector <int> prime;
 bool noPrime[4000001];
 
@@ -19,7 +19,28 @@ void init() {
   }
 }
 
-int a, ans[MAX], used[MAX + 1];
+void get_factor(int n, vector <int> &vec) {
+  for (int i = 0; (long long)prime[i] * prime[i] <= n; ++i) {
+    if (n % prime[i] == 0) {
+      if (used.find(prime[i]) != used.end()) {
+        vec.clear(); 
+        vec.push_back(-1);
+        return;
+      }
+      vec.push_back(prime[i]);
+      while (n % prime[i] == 0) n /= prime[i];
+    }
+  }
+  if (n > 1) {
+    if (used.find(n) != used.end()) {
+      vec.clear(); vec.push_back(-1);
+      return;
+    }
+    vec.push_back(n);
+  }
+}
+
+int a, ans[MAX];
 int main(int argc, char *argv[]) {
   int n, i, j, flg = 1, p = 0;
   init();
@@ -27,50 +48,31 @@ int main(int argc, char *argv[]) {
   for (i = 0; i < n; ++i) {
     scanf("%d", &a);
     if (!flg) {
-      while (used_prime.find(prime[p]) != used_prime.end()) ++p;
+      while (used.find(prime[p]) != used.end()) ++p;
       ans[i] = prime[p];
-      used_prime.insert(prime[p]);
+      used.insert(prime[p]);
     } else {
       vector <int> factor;
-      int tmp = a;
-      for (j = 0; (long long)prime[j] * prime[j] <= tmp;) {
-        if (tmp % prime[j]) ++j;
-        else {
-          if (used_prime.find(prime[j]) != used_prime.end()) {
-            flg = 0;
-            break;
-          }
-          factor.push_back(prime[j]);
-          while (tmp % prime[j] == 0) tmp /= prime[j];
-        }
-      }
-      if (tmp > 1) factor.push_back(tmp);
-      if (flg) {
-        for (int fac : factor) used_prime.insert(fac);
+      get_factor(a, factor);
+      if (factor[0] > 0) {
+        for (int fac : factor) used.insert(fac);
+        used.insert(a);
         ans[i] = a;
-        used[a] = 1;
       } else {
-        for (int k = a + 1; true; ++k) {
+        int k; flg = 0;
+        for (k = a + 1; true; ++k) {
           bool valid = true;
-          for (int fac : used_prime) {
+          for (int fac : used)
             if (k % fac == 0) {
               valid = false;
               break;
             }
-          }
-          if (!valid) continue;
-
-          ans[i] = k; used[k] = 1;
-          for (j = 0; (long long)prime[j] * prime[j] <= k;) {
-            if (k % prime[j]) ++j;
-            else {
-              used_prime.insert(prime[j]);
-              while (k % prime[j] == 0) k /= prime[j];
-            }
-          }
-          if (k > 1) used_prime.insert(k);
-          break;
+          if (valid) break;
         }
+        ans[i] = k;
+        get_factor(k, factor);
+        for (int fac : factor) used.insert(fac);
+        used.insert(k);
       }
     }
   }
