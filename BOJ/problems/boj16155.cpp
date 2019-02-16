@@ -58,3 +58,4 @@ int main(int argc, char *argv[]) {
   if (res.denominator == 1) return !printf("%lld\n", abs(res.numerator));
   return !printf("%lld/%lld\n", abs(res.numerator), res.denominator);
 }
+
