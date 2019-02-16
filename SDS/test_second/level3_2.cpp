@@ -1,39 +1,39 @@
-#include <iostream>
-#include <vector>
-#define INF 987654321
-using namespace std;
+// #include <iostream>
+// #include <vector>
+// #define INF 987654321
+// using namespace std;
 
-int pow(int base, int exp);
+// int pow(int base, int exp);
 
-int main(int argc, char *argv[]) {
-  cin.tie(0);
-  ios_base::sync_with_stdio(false);
+// int main(int argc, char *argv[]) {
+//   cin.tie(0);
+//   ios_base::sync_with_stdio(false);
 
-  int T, N, R, P1, P2, T1, T2, answer;
-  cin >> T;
-  for (int test_case = 1; test_case <= T; ++test_case) {
-    cin >> R >> N;
-    answer = INF;
-    vector< vector<int> > nodes(2 * N + 1, vector<int>(pow(3, N), INF));
-    vector<int> pos(2 * N + 1);
+//   int T, N, R, P1, P2, T1, T2, answer;
+//   cin >> T;
+//   for (int test_case = 1; test_case <= T; ++test_case) {
+//     cin >> R >> N;
+//     answer = INF;
+//     vector< vector<int> > nodes(2 * N + 1, vector<int>(pow(3, N), INF));
+//     vector<int> pos(2 * N + 1);
     
-    for (int i = 0; i < N; ++i) {
-      cin >> P1 >> P2 >> T1 >> T2;
-      pos.push_back(P1);
-      pos.push_back(P2);
-    }
+//     for (int i = 0; i < N; ++i) {
+//       cin >> P1 >> P2 >> T1 >> T2;
+//       pos.push_back(P1);
+//       pos.push_back(P2);
+//     }
 
-  }
+//   }
 
-  return 0;
-}
+//   return 0;
+// }
 
-int pow(int base, int exp) {
-  int res = base, cnt = 1;
-  for (; cnt * cnt <= exp; ++cnt) res *= res;
-  for (; cnt <= exp; ++cnt) res *= base;
-  return res;
-}
+// int pow(int base, int exp) {
+//   int res = base, cnt = 1;
+//   for (; cnt * cnt <= exp; ++cnt) res *= res;
+//   for (; cnt <= exp; ++cnt) res *= base;
+//   return res;
+// }
 
 // #include <iostream>
 // #include <algorithm>
@@ -389,3 +389,35 @@ int pow(int base, int exp) {
 // // int get_abs(int a) { return a < 0 ? -a : a; }
 // // int get_min(int a, int b) { return a < b ? a : b; }
 // // int get_max(int a, int b) { return a > b ? a : b; }
+
+#include <cstdio>
+#include <cstring>
+#include <vector>
+#include <queue>
+#include <algorithm>
+using namespace std;
+
+struct stat {
+  int pos, time, idx;
+};
+
+const int MAX = 10;
+const int INF = 0x7f7f7f7f;
+stat stats[21];
+int DP[11][60000], _pow[11] = {1};
+
+int main(int argc, char *argv[]) {
+  for (int i = 1; i <= 10; ++i) _pow[i] = _pow[i - 1] * 3;
+
+  int T, R, N;
+  scanf("%d", &T);
+  for (int test_case = 1; test_case <= T; ++test_case) {
+    scanf("%d %d", &R, &N);
+    int sp, ep, st, et;
+    for (int i = 0; i < N; ++i) {
+      scanf("%d %d %d %d", &sp, &ep, &st, &et);
+      stats[2 * i] = {sp, st, i};
+      stats[2 * i + 1] = {ep, et, i};
+    }
+  }
+}
