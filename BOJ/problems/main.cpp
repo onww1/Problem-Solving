@@ -73,57 +73,8 @@ const ldb ERR = 1e-10;
 const int move_r[] = {-1, 0, 1, 0, -1, -1, 1, 1};
 const int move_c[] = {0, -1, 0, 1, -1, 1, -1, 1};
 
-int N, M, A[SZ];
-pii tree[2 * SZ];
-
-pii init(int node, int start, int end);
-void update(int node, int start, int end, int idx, int val);
-pii get_min(int node, int start, int end, int left, int right);
-
 int main(int argc, char *argv[]) {
   open();
 
-  N = readInt();
-  for (int i = 1; i <= N; ++i) A[i] = readInt();
-  init(1, 1, N);
-
-  M = readInt();
-  int a, b, c;
-  while (M--) {
-    a = readInt(), b = readInt(), c = readInt();;
-    if (a == 1) {
-      update(1, 1, N, b, c);
-    } else {
-      printf("%d\n", get_min(1, 1, N, b, c).second);
-    }
-  }
   return 0;
-}
-
-pii init(int node, int start, int end) {
-  if (start == end) return tree[node] = {A[start], start};
-  int mid = (start + end) / 2;
-  return tree[node] = min(init(node * 2, start, mid),
-                          init(node * 2 + 1, mid + 1, end));
-}
-
-void update(int node, int start, int end, int idx, int val) {
-  if (idx < start || end < idx) return;
-  if (start == end) {
-    tree[node] = {val, idx};
-    return;
-  }
-
-  int mid = (start + end) / 2;
-  update(node * 2, start, mid, idx, val);
-  update(node * 2 + 1, mid + 1, end, idx, val);
-  tree[node] = min(tree[node * 2], tree[node * 2 + 1]);
-}
-
-pii get_min(int node, int start, int end, int left, int right) {
-  if (end < left || right < start) return {INF, INF};
-  if (left <= start && end <= right) return tree[node];
-  int mid = (start + end) / 2;
-  return min(get_min(node * 2, start, mid, left, right),
-             get_min(node * 2 + 1, mid + 1, end, left, right));
 }
