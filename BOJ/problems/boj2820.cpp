@@ -1,36 +1,21 @@
-#define NON_SUBMIT
+/*
+ *  BOJ 2820. 자동차 공장
+ * 
+ *  시간 복잡도 : O(NlogN)
+ *  공간 복잡도 : O(N)
+ * 
+ *  dfs를 통해서 한 직원의 부하들의 인덱스를 모여있게 만들도록 바꾼 다음, 
+ *  그 인덱스를 가지고 세그먼트 트리를 만들어서 직원들의 월급을 관리해줬습니다. 
+ *  이때, 구간 변화에 대한 문제이므로 레이지 프로파게이션으로 구현했습니다.
+ */
 
 #include <algorithm>
-#include <functional>
-#include <iostream>
-#include <unordered_set>
-#include <unordered_map>
-#include <cmath>
 #include <cstdio>
 #include <cstring>
-#include <cstdlib>
 #include <vector>
-#include <queue>
-#include <map>
-#include <set>
-
-#ifdef NON_SUBMIT
-#define TEST(n) (n)
-#else
-#define TEST(n) ((void)0)
-#endif
-
-#pragma warning(disable:4996)
 using namespace std;
 
-typedef long long ll;
-typedef unsigned long long ull;
-typedef double db;
-typedef long double ldb;
-typedef pair <int, int> pii;
-typedef pair <ll, ll> pll;
-typedef pair <ll, int> pli;
-
+// Fast I/O
 const int BUFFER_SIZE = 1 << 18;
 char buf[BUFFER_SIZE];
 inline char read() {
@@ -59,22 +44,8 @@ inline ll readLL() {
   return flg ? sum : -sum;
 }
 
-void open() {
-  TEST(freopen("input.txt", "r", stdin));
-	TEST(freopen("output.txt", "w", stdout));
-	TEST(freopen("debug.txt", "w", stderr));
-}
-
 const int SZ = 1 << 19;
 const int MAX = 5e5;
-const int MOD = 1e9 + 7;
-const int INF = 0x3f3f3f3f;
-const ll LL_INF = 0x3f3f3f3f3f3f3f3fLL;
-const db PI = acos(-1);
-const ldb ERR = 1e-10;
-const int move_r[] = {-1, 0, 1, 0, -1, -1, 1, 1};
-const int move_c[] = {0, -1, 0, 1, -1, 1, -1, 1};
-
 int N, M, od, idx[MAX + 1], cn[MAX + 1], A[SZ], tree[2 * SZ], lazy[2 * SZ];
 vector <int> edges[MAX + 1];
 
@@ -84,18 +55,16 @@ void update_range(int, int, int, int, int, int);
 int get_val(int, int, int, int);
 
 int main(int argc, char *argv[]) {
-  open();
-
   N = readInt(), M = readInt(), A[1] = readInt();
   for (int i = 2; i <= N; ++i) {
     A[i] = readInt();
     edges[readInt()].push_back(i);
   }
 
-  dfs(1);
+  dfs(1); // dfs를 통해서 인덱스를 새롭게 지정해준다.
 
   for (int i = 1; i <= N; ++i) 
-    update_range(1, 1, N, idx[i], idx[i], A[i]);
+    update_range(1, 1, N, idx[i], idx[i], A[i]);  // 새롭게 지정된 인덱스에 월급을 업데이틓 해준다.
 
   char c; int a, x;
   for (int i = 0; i < M; ++i) {
@@ -103,6 +72,7 @@ int main(int argc, char *argv[]) {
     while (c == ' ' || c == '\n') c = read();
     a = readInt();
 
+    // 쿼리에 따라 월급을 업데이트 해주거나 해당 인덱스의 월급을 가져온다.
     if (c == 'p') {
       x = readInt();
       update_range(1, 1, N, idx[a] + 1, idx[a] + cn[a], x);
@@ -114,6 +84,7 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 
+// 인덱스 재지정을 위한 dfs
 int dfs(int node) {
   idx[node] = ++od;
 
@@ -125,6 +96,7 @@ int dfs(int node) {
   return cnt + 1;
 }
 
+// 레이지 업데이트
 void update_lazy(int node, int start, int end) {
   if (lazy[node] == 0) return;
   tree[node] += (end - start + 1) * lazy[node];
@@ -135,6 +107,7 @@ void update_lazy(int node, int start, int end) {
   lazy[node] = 0;
 }
 
+// 구간 업데이트
 void update_range(int node, int start, int end, int left, int right, int diff) {
   update_lazy(node, start, end);
   
@@ -154,6 +127,7 @@ void update_range(int node, int start, int end, int left, int right, int diff) {
   tree[node] = tree[node * 2] + tree[node * 2 + 1];
 }
 
+// 특정 인덱스의 값을 가져옴.
 int get_val(int node, int start, int end, int idx) {
   update_lazy(node, start, end);
 
