@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	int mx = -1e9;
-	for (int i = 0; i + K < N; ++i) 
+	for (int i = 0; i + K <= N; ++i) 
 		mx = max(mx, A[i + K] - A[i]);
 
 	return !printf("%d\n", mx);
