@@ -9,7 +9,7 @@ int N, mx;
 
 int main(int argc, char *argv[]) {
 	scanf("%d", &N);
-	for (int i = N / 2 + 1; i < N; ++i) {
+	for (int i = N / 2 + 1; i <= N; ++i) {
 		tmp.clear();
 		tmp.push_back(N);
 		tmp.push_back(i);
