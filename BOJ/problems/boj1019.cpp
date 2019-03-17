@@ -24,8 +24,3 @@ int main(int argc, char *argv[]) {
 	for (int i = 0; i < 10; ++i) printf("%lld ", cnt[i]);
 	return !printf("\n");
 }
-
-// 2834
-// 0xxx, 00xx, 000x => 100~999, 10~99, 1~9 => 0 : 180, other : 280 / 0 : 9, other : 19
-// 900 + 90 * 2 + 9 * 3 = 
-// 100 + 90 + 90    10 + 9
