@@ -1,21 +1,50 @@
-#include <iostream>
-#include <cstdlib>
+#include <algorithm>
+#include <cstdio>
+#include <cstring>
+#include <queue>
+#define X first
+#define Y second
 using namespace std;
+typedef pair <int, int> pii;
 
-int N, K, map[100001] = { 0, };
-int min = 1e9, cnt = 0;
+const int MAX = 1e5;
+int N, K;
+pii V[MAX + 1];
 
-void dfs(int pos) {
-	if (map[pos] > min)
-}
+int main(int argc, char *argv[]) {
+    scanf("%d %d", &N, &K);
 
-int main() {
-	cin >> N >> K;
-	memset(map, -1, 100001);
-	map[N] = 0;
+    queue <int> Q;
+    Q.push(N);
+    V[N] = {0, 1};
 
-	dfs(N);
-	cout << map[K] << '\n';
-	cout << cnt << '\n';
-	return 0;
+    while (!Q.empty()) {
+        int pos = Q.front();
+        int T = V[pos].X;
+        Q.pop();
+
+        if (pos == K) break;
+
+        if (pos - 1 >= 0) {
+            if (!V[pos - 1].Y || V[pos - 1].X > T + 1) {
+                V[pos - 1] = {T + 1, V[pos].Y};
+                Q.push(pos - 1);
+            } else if (V[pos - 1].X == T + 1) V[pos - 1].Y += V[pos].Y;
+        } 
+        if (pos + 1 <= MAX) {
+            if (!V[pos + 1].Y || V[pos + 1].X > T + 1) {
+                V[pos + 1] = {T + 1, V[pos].Y};
+                Q.push(pos + 1);
+            } else if (V[pos + 1].X == T + 1) V[pos + 1].Y += V[pos].Y;
+        }
+        if (2 * pos <= MAX) {
+            if (!V[2 * pos].Y || V[2 * pos].X > T + 1) {
+                V[2 * pos] = {T + 1, V[pos].Y};
+                Q.push(2 * pos);
+            } else if (V[2 * pos].X == T + 1) V[2 * pos].Y += V[pos].Y;
+        }
+    }
+
+    printf("%d\n%d\n", V[K].X, V[K].Y);
+    return 0;
 }
