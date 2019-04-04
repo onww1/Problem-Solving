@@ -2,6 +2,11 @@
 
 .class
 main
+main.cpp
+
+input.txt
+output.txt
+debug.txt
 
 .DS_Store
 .vscode
