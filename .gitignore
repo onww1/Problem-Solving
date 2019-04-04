@@ -1,36 +1,7 @@
 ## Algorithm Ignore File ##
 
-# all type
-*
+.class
+main
 
-# except .gitignore
-!.gitignore
-
-# except c, cpp, java, py, md files
-!*.c
-!*.cpp
-!*.java
-!*.py
-!*.md
-
-# except directories
-!BOJ
-!BOJ/problems
-!BOJ/contest_*
-
-!CodeForces
-!CodeForces/problems
-!CodeForces/contest_*
-
-!SDS
-!SDS/test_*
-
-!LINE
-!LINE/test_*
-
-!CodeGround
-!CodingParty
-!SWExpert
-!TestDoc
-!SCPC
-!ETC
+.DS_Store
+.vscode
