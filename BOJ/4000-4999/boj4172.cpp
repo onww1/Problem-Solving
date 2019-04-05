@@ -1,22 +1,17 @@
 #include <cstdio>
 #include <cmath>
+#define MOD 1000000
 
-int x[1000001] = {1};
-
-int getX(int i){
-	if(x[i] > 0) return x[i];
-	return x[i] = ( getX((int)std::floor((double)i-std::sqrt((double)i)))
-				  + getX((int)std::floor(std::log((double)i)))
-				  + getX((int)std::floor((double)i * std::sin((double)i) * std::sin((double)i)))
-				  ) % 1000000;
-}
-
+int x[1000001] = {1, };
+	
 int main(void){
+	for(int i=1; i<=1000000; i++){
+		x[i] = (x[(int)(i-sqrt(i))] + x[(int)(log(i))] + x[(int)(i * sin(i) * sin(i))])%MOD;
+	}
+
 	int in;
-	while(1){
-		scanf("%d", &in);
-		if(in == -1) break;
-		printf("%d\n", getX(in));
+	for(; scanf("%d", &in) && in != -1; ){
+		printf("%d\n", x[in]);
 	}
 	return 0;
 }
