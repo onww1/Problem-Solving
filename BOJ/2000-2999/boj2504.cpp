@@ -1,51 +1,43 @@
-#include <stdio.h>
-#include <string.h>
-#include <stack>
+#include <cstdio>
+#include <vector>
 using namespace std;
 
-int main(void){
-	stack<char> par;
-	stack<int> tmp;
-	char in[31];
-	int a, b;
-	scanf("%s", in);
-	int i, len = strlen(in);
-	for(i=0; i<len; i++){
-		if(in[i] == '('){
-			par.push(in[i]);
-			tmp.push(2);
-		} else if(in[i] == '['){
-			par.push(in[i]);
-			tmp.push(3);
-		} else if(in[i] == ')'){
-			if(par.empty() || par.top() != '('){printf("0\n"); return 0;}
-			par.pop();
-			b = tmp.top();
-			tmp.pop();
-			if(b != 2) b = 2 * (b-2);
-			if(tmp.empty()) tmp.push(b);
-			else{
-				a = tmp.top();
-				tmp.pop();
-				tmp.push(a+b);
+char in[31];
+int main(int argc, char *argv[]) {
+	scanf(" %s", in);
+	vector <char> pstack;
+	vector <int> nstack;
+
+	int cur = 0;
+	for (int i = 0; in[i]; ++i) {
+		if (in[i] == '(' || in[i] == '[') {
+			pstack.push_back(in[i]);
+			nstack.push_back(cur);
+			cur = 0;
+		}
+		else if (in[i] == ')') {
+			if (!pstack.empty() && pstack.back() == '(') {
+				if (cur == 0) cur = 2;
+				else cur *= 2;
+				cur += nstack.back();
+				nstack.pop_back();
+				pstack.pop_back();
 			}
-		} else if(in[i] == ']'){
-			if(par.empty() || par.top() != '['){printf("0\n"); return 0;}
-			par.pop();
-			b = tmp.top();
-			tmp.pop();
-			if(b != 3) b = 3 * (b-3);
-			if(tmp.empty()) tmp.push(b);
-			else{
-				a = tmp.top();
-				tmp.pop();
-				tmp.push(a+b);
+			else return !printf("0\n");
+		}
+		else {
+			if (!pstack.empty() && pstack.back() == '[') {
+				if (cur == 0) cur = 3;
+				else cur *= 3;
+				cur += nstack.back();
+				nstack.pop_back();
+				pstack.pop_back();
 			}
+			else return !printf("0\n");
 		}
 	}
-	a = 0;
-	while(!tmp.empty()){a+=tmp.top(); tmp.pop();}
-	if(!par.empty()) printf("0\n");
-	else printf("%d\n", a);
-	return 0;
+
+	if (!pstack.empty()) return !printf("0\n");
+	return !printf("%d\n", cur);
 }
+

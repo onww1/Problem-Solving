@@ -1,26 +1,24 @@
 #include <cstdio>
 #include <cstring>
 #include <algorithm>
+#include <vector>
 using namespace std;
 
-int phi[1001], noPrime[1001];
+int _gcd(int a, int b) { return b ? _gcd(b, a % b) : a; }
+
+int ans[1001], t, n;
 int main(int argc, char *argv[]) {
-	for (int i = 2; i <= 1000; ++i) phi[i] = i;
+
+	ans[1] = 3;
 	for (int i = 2; i <= 1000; ++i) {
-		if (!noPrime[i]) {
-			for (int j = 1; i * j <= 1000; ++j) {
-				phi[i * j] = phi[i * j] / i * (i - 1);
-				noPrime[i * j] = 1;
-			}
-		}
-		phi[i] += phi[i - 1];
+		for (int j = 1; j < i; ++j) if (_gcd(i, j) == 1) ans[i] += 2;
+		ans[i] += ans[i - 1];
 	}
 
-	int t, n;
 	scanf("%d", &t);
 	while (t--) {
 		scanf("%d", &n);
-		printf("%d\n", phi[n] * 2 + 3);
+		printf("%d\n", ans[n]);
 	}
 	return 0;
 }
