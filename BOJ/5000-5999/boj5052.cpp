@@ -1,56 +1,52 @@
-#include <iostream>
 #include <cstdio>
-#include <string>
+#include <cstring>
 #include <algorithm>
 using namespace std;
 
+struct Trie {
+	bool finish;
+	Trie *next[10];
+
+	Trie() {
+		finish = false;
+		memset(next, 0, sizeof(next));
+	}
+
+	~Trie() {
+		for (int i = 0; i < 10; ++i)
+			if (next[i]) delete next[i];
+	}
+
+	void insert(const char *key) {
+		if (*key == 0) finish = true;
+		else {
+			int cur = *key - '0';
+			if (next[cur] == 0) next[cur] = new Trie();
+			next[cur]->insert(key + 1);
+		}
+	}
+
+	int find(const char *key) {
+		if (*key == 0) return 0;
+		if (finish) return 1;
+		int cur = *key - '0';
+		next[cur]->find(key + 1);
+	}
+};
+
+const int MAX = 10000;
 int T, N;
-string numbers[10000];
+char A[MAX + 1][11];
 
-bool compareString(string a, string b){
-	int len1 = a.length();
-	int len2 = b.length();
-	int len = len1<len2?len1:len2;
-	for(int i=0; i<len; i++){
-		if(a[i] < b[i]) return true;
-		else if(a[i] > b[i]) return false;
-	}
-	return len1<len2;
-}
-
-bool isPrefix(int a, int b){
-	int len = numbers[a].length();
-	for(int i=0; i<len; i++){
-		if(numbers[a][i] != numbers[b][i]) return false;
-	}
-	return true;
-}
-
-int main(){
-	scanf("%d", &T);
-	while(T--){
+int main(int argc, char *argv[]) {
+	for (scanf("%d", &T); T; T--) {
 		scanf("%d", &N);
-		getchar();
-		for(int i=0; i<N; i++){
-			getline(cin, numbers[i]);
-		}
-
-		sort(numbers, numbers+N, compareString);
-
-		bool isYes = true;
-		for(int i=1; i<N && isYes; i++){
-			for(int j=0; j<i && isYes; j++){
-				if(isPrefix(j, i)){
-					printf("NO\n");
-					isYes = false;
-				}
-			}
-		}
-
-		if(isYes){
-			printf("YES\n");
-		}
+		Trie *root = new Trie();
+		for (int i = 0; i < N; ++i) scanf(" %s", A[i]), root->insert(A[i]);
+		bool hasPrefix = false;
+		for (int i = 0; i < N; ++i)
+			if (root->find(A[i])) hasPrefix = true;
+		printf("%s\n", hasPrefix ? "NO" : "YES");
 	}
-
 	return 0;
 }

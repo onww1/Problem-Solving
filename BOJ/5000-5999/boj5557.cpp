@@ -1,31 +1,25 @@
-#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+#include <queue>
+#include <vector>
+#include <functional>
 using namespace std;
-
 typedef long long ll;
 
-int main() {
-	cin.tie(NULL);
-	ios_base::sync_with_stdio(false);
+const int MAX = 100;
+ll a[MAX + 1], dp[MAX][21], n;
 
-	int N, A[100];
-	ll dp[100][21] = {0, };
-
-	cin >> N;
-	for (int i=0; i<N; i++) {
-		cin >> A[i];
-	}
-
-	dp[0][A[0]] = 1LL;
-	for (int i=1; i<N-1; i++) {
-		for (int j=0; j<=20; j++) {
-			if ( 0 <= j + A[i] && j + A[i] <= 20 )
-				dp[i][j+A[i]] += dp[i-1][j];
-			if ( 0 <= j - A[i] && j - A[i] <= 20 )
-				dp[i][j-A[i]] += dp[i-1][j];
+int main(int argc, char *argv[]) {
+	scanf("%lld", &n);
+	for (int i = 0; i < n; ++i) scanf("%lld", a + i);
+	dp[0][a[0]] = 1;
+	for (int i = 1; i < n - 1; ++i) {
+		for (int j = 0; j <= 20; ++j) {
+			if (0 <= j + a[i] && j + a[i] <= 20) dp[i][j + a[i]] += dp[i - 1][j];
+			if (0 <= j - a[i] && j - a[i] <= 20) dp[i][j - a[i]] += dp[i - 1][j];
 		}
 	}
 
-	cout << dp[N-2][A[N-1]] << '\n';
-
-	return 0;
+	return !printf("%lld\n", dp[n - 2][a[n - 1]]);
 }
