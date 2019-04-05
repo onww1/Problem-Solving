@@ -1,34 +1,35 @@
-#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <vector>
+#include <queue>
+#include <algorithm>
 using namespace std;
 
-int main(int argc, char const *argv[])
-{
-	int n, k;
-	cin >> n >> k;
+const int MAX = 1000;
+bool noPrime[MAX + 1];
 
-	int arr[1001] = {1, 1, 0, };
-	bool loop = true;
-	int idx = 2;
-	while(loop)
-	{
-		while(arr[idx]) idx++;
-		int c = 1;
-		while(idx * c <= n)
-		{
-			if(!arr[idx * c])
-			{	
-				arr[idx * c] = 1;
-				k--;
-				if(k == 0)
-				{
-					cout << (idx * c) << '\n';
-					loop = false;
+int main(int argc, char *argv[]) {
+	int k, n;
+	scanf("%d %d", &n, &k);
+	for (int i = 2; i <= n; ++i) {
+		if (!noPrime[i]) {
+			--k;
+			if (!k) {
+				printf("%d\n", i);
+				break;
+			}
+
+			for (int j = i * i; j <= n; j += i) {
+				if (!noPrime[j]) --k;
+				noPrime[j] = true;
+				if (!k) {
+					printf("%d\n", j);
 					break;
 				}
 			}
-			c++;
 		}
-	}
 
+		if (k <= 0) break;
+	}
 	return 0;
 }

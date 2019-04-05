@@ -1,61 +1,114 @@
+#define NON_SUBMIT
+
+#include <algorithm>
+#include <functional>
+#include <iostream>
+#include <unordered_set>
+#include <unordered_map>
+#include <cmath>
 #include <cstdio>
+#include <cstring>
+#include <cstdlib>
 #include <vector>
+#include <queue>
+#include <map>
+#include <set>
+
+#ifdef NON_SUBMIT
+#define TEST(n) (n)
+#else
+#define TEST(n) ((void)0)
+#endif
+
+#pragma warning(disable:4996)
 using namespace std;
 
-char buf[1 << 17];
+typedef long long ll;
+typedef unsigned long long ull;
+typedef double db;
+typedef long double ldb;
+typedef pair <int, int> pii;
+typedef pair <ll, ll> pll;
+typedef pair <ll, int> pli;
+
+const int BUFFER_SIZE = 1 << 18;
+char buf[BUFFER_SIZE];
 inline char read() {
-  static int idx = 1 << 17;
-  if (idx == 1 << 17) {
-    int nidx = fread(buf, 1, 1 << 17, stdin);
+  static int idx = BUFFER_SIZE;
+  if (idx == BUFFER_SIZE) {
+    int nidx = fread(buf, 1, BUFFER_SIZE, stdin);
     if (!nidx) return 0;
     idx = 0;
   }
   return buf[idx++];
 }
 inline int readInt() {
-  int sum = 0;
+  int sum = 0, flg = 1;
   char now = read();
   while (now == ' ' || now == '\n') now = read();
+  if (now == '-') flg = 0, now = read();
   while ('0' <= now && now <= '9') sum = sum * 10 + now - '0', now = read();
-  return sum;
+  return flg ? sum : -sum;
 }
+inline ll readLL() {
+  ll sum = 0, flg = 1;
+  char now = read();
+  while (now == ' ' || now == '\n') now = read();
+  if (now == '-') flg = 0, now = read();
+  while ('0' <= now && now <= '9') sum = sum * 10 + now - '0', now = read();
+  return flg ? sum : -sum;
+}
+
+void open() {
+  TEST(freopen("input.txt", "r", stdin));
+	TEST(freopen("output.txt", "w", stdout));
+	TEST(freopen("debug.txt", "w", stderr));
+}
+
+const int MAX = 5e5;
+const int MOD = 1e9 + 7;
+const int INF = 0x3f3f3f3f;
+const ll LL_INF = 0x3f3f3f3f3f3f3f3fLL;
+const db PI = acos(-1);
+const ldb ERR = 1e-10;
+const int move_r[] = {-1, 0, 1, 0, -1, -1, 1, 1};
+const int move_c[] = {0, -1, 0, 1, -1, 1, -1, 1};
+
+int N, tree[MAX + 1], ans[MAX + 1];
+pii A[MAX + 1];
 
 void update(int node, int diff);
 int sum(int node);
 
-int tree[100050];
-vector <int> table[100050];
 int main(int argc, char *argv[]) {
-  int n, a, i, t;
-  n = readInt();
-  for (i = 0; i < n; ++i) {
-    a = readInt();
-    t = (a - 1) / 100000;
-    int l = 0, r = table[t].size(), m;
-    while (l < r) {
-      m = (l + r) / 2;
-      if (table[t][m] < a) l = m + 1;
-      else r = m;
-    }
-    printf("%d\n", i + 1 - sum(t) - r);
-    table[t].insert(table[t].begin() + r, a);
-    update(t + 1, 1);
+  open();
+
+  N = readInt();
+  for (int i = 0; i < N; ++i) A[i] = {readInt(), i + 1};
+
+  sort(A, A + N);
+  for (int i = 0; i < N; ++i) {
+    int val = sum(A[i].second - 1);
+    ans[A[i].second] = A[i].second - val;
+    update(A[i].second, 1);
   }
+
+  for (int i = 1; i <= N; ++i) printf("%d\n", ans[i]);
   return 0;
 }
 
 void update(int node, int diff) {
-  while (node <= 100000) {
+  while (node <= N) {
     tree[node] += diff;
-    node += (node & -node);
+    node += node & -node;
   }
 }
 
 int sum(int node) {
-  int s = 0;
+  int ret = 0;
   while (node > 0) {
-    s += tree[node];
-    node -= (node & -node);
+    ret += tree[node];
+    node -= node & -node;
   }
-  return s;
+  return ret;
 }

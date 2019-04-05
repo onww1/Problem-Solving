@@ -1,44 +1,48 @@
-#include <iostream>
-#include <queue>
+/*
+ *  BOJ 2252. 줄 세우기
+ *
+ *  시간 복잡도 : O(E)
+ *  공간 복잡도 : O(V + E)
+ *
+ *  전체적으로 위상정렬을 하면서 노드를 방문하는대로 노드의 번호를 출력하면 원하는 답을 구할 수 있습니다.
+ */
+
+#include <algorithm>
+#include <cstdio>
+#include <cstring>
 #include <vector>
+#include <queue>
 using namespace std;
 
-int main(int argc, char const *argv[])
-{
-	cin.tie(0);
-	ios_base::sync_with_stdio(false);
+const int MAX = 32000;
+int V, E, indegree[MAX + 1];
+vector <int> edges[MAX + 1];
 
-	int N, M, u, v;
-	cin >> N >> M;
+int main(int argc, char *argv[]) {
+  scanf("%d %d", &V, &E);
+  for (int i = 0; i < E; ++i) {
+    int hi, lo;
+    scanf("%d %d", &hi, &lo);
+    edges[hi].push_back(lo);  // hi가 lo의 앞에 서야 한다.
+    indegree[lo]++; 
+  } 
 
-	vector< vector<int> > edges(N+1);
-	vector<int> indegree(N+1, 0);
-	queue<int> q;
+  queue <int> Q;  // 위상정렬을 위한 큐
+  for (int node = 1; node <= V; ++node) {
+    // 앞에 서야 한다는게 확실한 친구가 없으면 큐에 넣는다.
+    if (!indegree[node]) Q.push(node);
+  }
 
-	for (int i=0; i<M; ++i) {
-		cin >> u >> v;
-		edges[u].push_back(v);
-		indegree[v]++;
-	}
+  // Q를 돌면서 한 노드를 방문하면 바로 출력하고, 연결된 노드의 indegree를 줄인다.
+  // 이 때, 그 노드의 indegree가 0이 되면 큐에 넣는다.
+  while (!Q.empty()) {
+    int current = Q.front();
+    Q.pop();
 
-	for (int i=1; i<=N; ++i) 
-		if (!indegree[i]) q.push(i);
-	
-	int cnt = 0;
-	while (!q.empty()) {
-		int node = q.front();
-		q.pop();
+    printf("%d ", current);
+    for (int next : edges[current]) 
+      if (--indegree[next] == 0) Q.push(next);
+  }
 
-		cout << node << ' ';
-		int len = edges[node].size();
-		for (int i=0; i<len; ++i) {
-			indegree[edges[node][i]]--;
-			if (indegree[edges[node][i]] == 0)
-				q.push(edges[node][i]);
-		}
-		cnt++;
-		if (cnt == N) break;
-	}
-
-	return 0;
+  return 0;
 }

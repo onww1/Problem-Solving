@@ -1,32 +1,30 @@
 #include <cstdio>
-#define INF 987654321
+#include <cstring>
+#include <algorithm>
 using namespace std;
 
-int cache[16][1 << 16];
-int n, w[16][16];
+const int MAX = 16;
+const int INF = 0x7f7f7f7f;
+int N, D[MAX][MAX], DP[MAX][1 << MAX];
 
-int get_min(int a, int b) { return a < b ? a : b; }
+int solve(int visited, int cur) {
+	if (visited == (1 << N) - 1) return D[cur][0] == 0 ? INF : D[cur][0];
 
-int solve(int cur, int visited) {
-	if (visited == (1 << n) - 1) {
-		if (w[cur][0] == 0) return INF;
-		return w[cur][0];
-	}
-
-	int &ret = cache[cur][visited];
-	if (ret != 0) return ret;
+	int &ret = DP[cur][visited];
+	if (ret != -1) return ret;
 	ret = INF;
-	for (int next = 1; next < n; ++next) {
-		if (visited & (1 << next)) continue;
-		if (w[cur][next] == 0) continue;
-		ret = get_min(ret, solve(next, visited | (1 << next)) + w[cur][next]);
+
+	for (int i = 1; i < N; ++i) {
+		if (visited & (1 << i)) continue;
+		if (D[cur][i] > 0) ret = min(ret, solve(visited | (1 << i), i) + D[cur][i]);
 	}
+
 	return ret;
 }
 
 int main(int argc, char *argv[]) {
-	scanf("%d", &n);
-	for (int i=0; i<n; ++i) for (int j=0; j<n; ++j) scanf("%d", &w[i][j]);
-	printf("%d\n", solve(0, 1));
-	return 0;
+	scanf("%d", &N);
+	for (int i = 0; i < N; ++i) for (int j = 0; j < N; ++j) scanf("%d", &D[i][j]);
+	memset(DP, -1, sizeof(DP));
+	return !printf("%d\n", solve(1, 0));
 }
