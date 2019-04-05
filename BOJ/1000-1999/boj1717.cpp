@@ -1,38 +1,28 @@
-#include <iostream>
-#include <vector>
-using namespace std;
+#include <cstdio>
+#include <cstring>
+const int MAX = 1e6;
 
-vector<int> parent;
+int pa[MAX + 1], n, m;
 
-int find(int N) {
-	if (parent[N] < 0) return N;
-	return parent[N] = find(parent[N]);
+int _find(int a) {
+	if (pa[a] < 0) return a;
+	return pa[a] = _find(pa[a]);
 }
 
-void merge(int N, int M) {
-	int a = find(N);
-	int b = find(M);
-	if (a == b) return;
-	parent[b] = a;
+void _union(int a, int b) {
+	int pa_a = _find(a);
+	int pa_b = _find(b);
+	if (pa_a != pa_b) pa[pa_a] = pa_b;
 }
 
-int main(int argc, char const *argv[])
-{
-	cin.tie(0);
-	ios_base::sync_with_stdio(false);
-
-	int N, M, c, a, b;
-	cin >> N >> M;
-	parent.resize(N+1, -1);
-	for (int i=0; i<M; ++i) {
-		cin >> c >> a >> b;
-		if (c) {
-			if (find(a) == find(b)) cout << "YES" << '\n';
-			else cout << "NO" << '\n';
-		}
-		else {
-			merge(a, b);
-		}
+int main(int argc, char *argv[]) {
+	int a, b, c;
+	scanf("%d %d", &n, &m);
+	memset(pa, -1, sizeof(pa));
+	while (m--) {
+		scanf("%d %d %d", &c, &a, &b);
+		if (c) printf("%s\n", _find(a) == _find(b) ? "YES" : "NO");
+		else _union(a, b);
 	}
 	return 0;
 }
