@@ -58,4 +58,4 @@ int main(int argc, char *argv[]) {
 
   memset(DP, -1, sizeof(DP));
   return !printf("%d\n", min(solve(1, 0, 1), solve(1, 0, 0)));
-}
+} 
