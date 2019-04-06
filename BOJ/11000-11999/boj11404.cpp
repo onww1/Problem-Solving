@@ -1,43 +1,50 @@
-#include <iostream>
+#include <cstdio>
+#include <cstring>
 #include <vector>
-#define INF 987654321
+#include <queue>
+#include <algorithm>
+#include <functional>
 using namespace std;
+typedef pair<int, int> pii;
 
-int main(int argc, char const *argv[])
-{
-	cin.tie(0);
-	ios_base::sync_with_stdio(false);
+const int MAX = 100;
+const int INF = 0x7f7f7f7f;
 
-	int N, M;
-	cin >> N >> M;
+int N, M, dist[MAX + 1];
+vector <pii> edges[MAX + 1];
 
-	vector< vector<int> > edge(N);
-	for (int i=0; i<N; i++) {
-		edge[i].resize(N);
-		for (int j=0; j<N; j++)
-			if (i != j) edge[i][j] = INF;
-	}
+void dijkstra(int src) {
+	priority_queue < pii, vector<pii>, greater<pii> > pq;
+	dist[src] = 0; pq.push({ 0, src });
 
-	int u, v, w;
-	for (int i=0; i<M; i++) {
-		cin >> u >> v >> w;
-		if (edge[u-1][v-1] > w)
-			edge[u-1][v-1] = w;
-	}
+	while (!pq.empty()) {
+		int cur = pq.top().second;
+		int dis = pq.top().first;
+		pq.pop();
 
-	for (int k=0; k<N; k++) {
-		for (int i=0; i<N; i++) {
-			for (int j=0; j<N; j++) {
-				if (edge[i][j] > edge[i][k] + edge[k][j])
-					edge[i][j] = edge[i][k] + edge[k][j];
+		for (auto &next : edges[cur]) {
+			if (dist[next.first] > dist[cur] + next.second) {
+				dist[next.first] = dist[cur] + next.second;
+				pq.push({ dist[next.first], next.first });
 			}
 		}
 	}
+}
 
-	for (int i=0; i<N; i++) {
-		for (int j=0; j<N; j++)
-			cout << (edge[i][j] == INF?0:edge[i][j]) << ' ';
-		cout << '\n';
+int main(int argc, char *argv[]) {
+	int u, v, w;
+	scanf("%d %d", &N, &M);
+	for (int i = 0; i < M; ++i) {
+		scanf("%d %d %d", &u, &v, &w);
+		edges[u].push_back({ v, w });
 	}
+
+	for (int i = 1; i <= N; ++i) {
+		memset(dist, 0x7f, sizeof(dist));
+		dijkstra(i);
+		for (int j = 1; j <= N; ++j) printf("%d ", dist[j] == INF ? 0 : dist[j]);
+		puts("");
+	}
+
 	return 0;
 }

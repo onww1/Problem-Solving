@@ -1,40 +1,21 @@
 #include <cstdio>
 #include <cstring>
+#include <algorithm>
+#include <vector>
 using namespace std;
 
+char in[100001];
+int cnt[10], s;
 int main(int argc, char *argv[]) {
-  char input[100001];
-  int count[10] = {0, };
-  scanf("%s", input);
-  int len = strlen(input);
-  for (int i=0; i<len; ++i) {
-    ++count[input[i] - '0'];
-  }
+	scanf(" %s", in);
+	for (int i = 0; in[i]; ++i) {
+		cnt[in[i] - '0']++;
+		s = (s + (in[i] - '0')) % 3;
+	}
 
-  if (!count[0]) {
-    printf("-1\n");
-    return 0;
-  }
+	if (s != 0 || cnt[0] == 0) return !printf("-1\n");
 
-  int sum = 0;
-  for (int i=1; i<10; ++i) 
-    sum += (i * count[i]);
-  
-  if (sum % 3) {
-    printf("-1\n");
-    return 0;
-  }
-  
-  int idx = 9;
-  for (int i=0; i<len; ++i) {
-    if (count[idx]) {
-      --count[idx];
-      input[i] = idx + '0';
-    } else {
-      --idx;
-      --i;
-    }
-  }
-  printf("%s\n", input);
-  return 0;
+	for (int i = 9, p = 0; i >= 0; --i) 
+		while (cnt[i]) in[p++] = i + '0', cnt[i]--;
+	return !printf("%s\n", in);
 }

@@ -1,36 +1,43 @@
 #include <cstdio>
+#include <cstring>
 #include <vector>
+#include <queue>
+#include <algorithm>
 using namespace std;
+typedef long long ll;
+
+const int MAX = 1e6;
+bool noPrime[MAX + 1];
+vector <int> prime;
 
 int main(int argc, char *argv[]) {
-  bool noPrime[1000001] = { true, true, };
-  for (int i=2; i*i<=1000000; ++i) {
-    if (!noPrime[i]) {
-      for (int j=i; i*j<=1000000; ++j) {
-        noPrime[i*j] = true;
-      }
-    }
-  }
+	
+	for (int i = 2; i <= MAX; ++i) {
+		if (!noPrime[i]) {
+			prime.push_back(i);
+			for (ll j = (ll)i * i; j <= MAX; j += i) noPrime[j] = true;
+		}
+	}
 
-  vector<int> prime;
-  for (int i=3; i<1000000; ++i) 
-    if (!noPrime[i]) prime.push_back(i);
-  
-  int even;
-  while (1) {
-    scanf("%d", &even);
-    if (!even) break;
+	int n;
+	while (true) {
+		scanf("%d", &n);
+		if (!n) break;
 
-    int idx = 0;
-    for (; idx < prime.size() && prime[idx] < even; ++idx) {
-      if (!noPrime[even - prime[idx]]) {
-        printf("%d = %d + %d\n", even, prime[idx], even - prime[idx]);
-        break;
-      }
-    }
-    if (idx == prime.size() || prime[idx] >= even) {
-      printf("Goldbach's conjecture is wrong.\n");
-    }
-  }
-  return 0;
+		for (int j = 1; j < prime.size(); ++j) {
+			if (2 * prime[j] <= n) {
+				auto it = lower_bound(prime.begin(), prime.end(), n - prime[j]);
+				if (it != prime.end() && *it == n - prime[j]) {
+					printf("%d = %d + %d\n", n, prime[j], *it);
+					break;
+				}
+			}
+			else {
+				puts("Goldbach's conjecture is wrong.");
+				break;
+			}
+		}
+	}
+	
+	return 0;
 }

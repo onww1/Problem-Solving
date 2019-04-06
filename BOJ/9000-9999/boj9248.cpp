@@ -1,69 +1,49 @@
-#include <cstdio>
-#include <cstring>
+#include <stdio.h>
+#include <string.h>
 #include <vector>
-#include <algorithm>
 using namespace std;
-
-const int MAX = 5e5 + 5;
-int N, SA[MAX], LCP[MAX];
-char S[MAX];
-
-void countingSort(const int *A, const int *B, int *C, int N, int M);
-void suffixArray(const char *A, int *C, int N);
-void longestCommonPrefix(const int *A, const char *B, int *C, int N);
-
-int main(int argc, char *argv[]) {
-	
-	scanf(" %s", S);
-	for (N = 0; S[N]; ++N);
-
-	suffixArray(S, SA, N);
-	longestCommonPrefix(SA, S, LCP, N);
-
-	for (int i = 0; i < N; ++i) printf("%d ", SA[i] + 1);	printf("\nx ");
-	for (int i = 1; i < N; ++i) printf("%d ", LCP[i]);		puts("");
-	return 0;
-
+  
+#define MAXN 500005
+  
+int N;
+int SA[MAXN],lcp[MAXN];
+char S[MAXN];
+  
+void SuffixArray()
+{
+    int i,j,k;
+    int m = 26;
+    vector <int> cnt(max(N,m)+1,0),x(N+1,0),y(N+1,0);
+    for (i=1;i<=N;i++) cnt[x[i] = S[i]-'a'+1]++;
+    for (i=1;i<=m;i++) cnt[i] += cnt[i-1];
+    for (i=N;i;i--) SA[cnt[x[i]]--] = i;
+    for (int len=1,p=1;p<N;len<<=1,m=p){
+        for (p=0,i=N-len;++i<=N;) y[++p] = i;
+        for (i=1;i<=N;i++) if (SA[i] > len) y[++p] = SA[i]-len;
+        for (i=0;i<=m;i++) cnt[i] = 0;
+        for (i=1;i<=N;i++) cnt[x[y[i]]]++;
+        for (i=1;i<=m;i++) cnt[i] += cnt[i-1];
+        for (i=N;i;i--) SA[cnt[x[y[i]]]--] = y[i];
+        swap(x,y); p = 1; x[SA[1]] = 1;
+        for (i=1;i<N;i++)
+            x[SA[i+1]] = SA[i]+len <= N && SA[i+1]+len <= N && y[SA[i]] == y[SA[i+1]] && y[SA[i]+len] == y[SA[i+1]+len] ? p : ++p;
+    }
 }
-
-int cnt[MAX];
-void countingSort(const int *A, const int *B, int *C, int N, int M) {
-	for (int i = 0; i <= M; ++i) cnt[i] = 0;
-	for (int i = 0; i < N; ++i) cnt[B[A[i]]]++;
-	for (int i = 1; i <= M; ++i) cnt[i] += cnt[i - 1];
-	for (int i = N; i--; C[--cnt[B[A[i]]]] = A[i]);
+  
+void LCP()
+{
+    int i,j,k=0;
+    vector <int> rank(N+1,0);
+    for (i=1;i<=N;i++) rank[SA[i]] = i;
+    for (i=1;i<=N;lcp[rank[i++]]=k)
+        for (k?k--:0,j=SA[rank[i]-1];S[i+k]==S[j+k];k++);
 }
-
-int g[MAX], tg[MAX];
-void suffixArray(const char *A, int *C, int N) {
-	int i, j, k;
-	for (i = 0; i < N; ++i) {
-		g[i] = A[i] - 'a' + 1;
-		tg[i] = i;
-	}
-
-	countingSort(tg, g, C, N, 26);
-	for (i = k = 1; i < N && k < N; i <<= 1) {
-		for (k = 0; k < i; ++k) tg[k] = k - i + N;
-		for (j = 0; j < N; ++j) if (C[j] >= i) tg[k++] = C[j] - i;
-		countingSort(tg, g, C, N, k);
-		tg[C[0]] = k = 1;
-		for (j = 1; j < N; ++j) {
-			if (g[C[j]] != g[C[j - 1]] || g[C[j] + i] != g[C[j - 1] + i]) ++k;
-			tg[C[j]] = k;
-		}
-		for (j = 0; j < N; ++j) g[j] = tg[j];
-	}
-}
-
-void longestCommonPrefix(const int *A, const char *B, int *C, int N) {
-	int i, j;
-	for (i = 0; i < N; ++i) tg[A[i]] = i;
-	for (i = j = 0; i < N; ++i) {
-		if (tg[i]) {
-			while (B[i + j] == B[A[tg[i] - 1] + j]) ++j;
-			C[tg[i]] = j;
-		}
-		if (j) j--;
-	}
+  
+int main()
+{
+    int i;
+    scanf("%s",S+1); N = strlen(S+1);
+    SuffixArray(); LCP();
+    for (i=1;i<=N;i++) printf("%d ",SA[i]); printf("\nx");
+    for (i=2;i<=N;i++) printf(" %d",lcp[i]); puts("");
 }

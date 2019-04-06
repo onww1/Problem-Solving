@@ -1,23 +1,26 @@
-#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
 using namespace std;
 
-int main(int argc, char const *argv[])
-{
-	cin.tie(0);
-	ios_base::sync_with_stdio(false);
+const int MAX = 1e5;
+int A[MAX + 1], N, M;
 
-	int N, M, a, b, A[100001];
-	cin >> N >> M;
+void swap(int &a, int &b) { int tmp = a; a = b; b = tmp; }
 
-	A[0] = 0;
-	for (int i=1; i<=N; ++i) {
-		cin >> A[i];
-		A[i] += A[i-1];
+int main(int argc, char *argv[]) {
+	scanf("%d %d", &N, &M);
+	for (int i = 1; i <= N; ++i) {
+		scanf("%d", A + i);
+		A[i] += A[i - 1];
 	}
 
-	for (int i=0; i<M; ++i) {
-		cin >> a >> b;
-		cout << (A[b] - A[a-1]) << '\n';
+	int s, e;
+	while (M--) {
+		scanf("%d %d", &s, &e);
+		if (s > e) swap(s, e);
+		printf("%d\n", A[e] - A[s - 1]);
 	}
+
 	return 0;
 }
