@@ -1,6 +1,6 @@
 ## Algorithm Ignore File ##
 
-.class
+*.class
 main
 main.cpp
 
