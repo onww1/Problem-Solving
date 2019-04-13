@@ -8,4 +8,4 @@ int main(int argc, char *argv[]) {
         printf("%d\n", A & (A - 1) ? 0 : 1);
     }
     return 0;
-}
+} 
