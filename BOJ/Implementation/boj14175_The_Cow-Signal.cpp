@@ -1,18 +1,15 @@
 #include <cstdio>
-int M, N, K;
-char in[11];
-int main() {
-	scanf("%d %d %d", &M, &N, &K);
-	for (int i = 0; i < M; ++i) {
-		scanf(" %s", in);
-		for (int j = 0; j < K; ++j) {
-			for (int k = 0; in[k]; ++k) {
-				for (int l = 0; l < K; ++l) {
-					printf("%c", in[k]);
-				}
-			}
-			puts("");
-		}
-	}
-	return 0;
+int N, M, K;
+char in[11], out[101];
+int main(int argc, char *argv[]) {
+    scanf("%d %d %d", &N, &M, &K);
+    for (int i = 0; i < N; ++i) {
+        scanf(" %s", in);
+        for (int j = 0; in[j]; ++j) 
+            for (int k = 0; k < K; ++k)
+                out[j * K + k] = in[j];
+        for (int k = 0; k < K; ++k)
+            printf("%s\n", out);
+    }
+    return 0;
 }
