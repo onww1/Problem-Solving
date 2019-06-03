@@ -7,7 +7,7 @@ int main(int argc, char *argv[]) {
         scanf("%d", x[i] + j);
     int refx = x[a][b];
     for (int i = 1; i <= n; ++i) 
-        if (x[i][b] > refx || x[i][a] > refx) {
+        if (x[i][b] > refx || x[a][i] > refx) {
             puts("ANGRY");
             return 0;
         }
