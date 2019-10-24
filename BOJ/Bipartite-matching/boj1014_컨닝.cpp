@@ -63,7 +63,7 @@ const ldb ERR = 1e-10;
 const int move_r[] = {-1, -1, 0, 0, 1, 1};
 const int move_c[] = {-1, 1, -1, 1, -1, 1};
 
-int t, n, m, b, mp[10][10], nm[10][10], amat[50], bmat[50];
+int t, n, m, b, mp[10][10], nm[10][10], bmat[50];
 char in[11];
 bool visited[50];
 vector <int> edges[50];
@@ -73,7 +73,6 @@ bool dfs(int a) {
 	visited[a] = true;
 	for (int b : edges[a])
 		if (bmat[b] == -1 || dfs(bmat[b])) {
-			amat[a] = b;
 			bmat[b] = a;
 			return true;
 		}
@@ -116,7 +115,6 @@ int main(int argc, char *argv[]) {
     		}
 
     	int mx = 0;
-    	memset(amat, -1, sizeof(amat));
     	memset(bmat, -1, sizeof(bmat));
     	for (int i = 0; i < aa; ++i) {
     		memset(visited, 0, sizeof(visited));
