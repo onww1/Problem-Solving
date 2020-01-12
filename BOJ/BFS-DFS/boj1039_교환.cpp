@@ -63,40 +63,71 @@ const ldb ERR = 1e-10;
 const int move_r[] = {-1, 0, 1, 0, -1, -1, 1, 1};
 const int move_c[] = {0, -1, 0, 1, -1, 1, -1, 1};
 
+int v[1000001][2], n, m, k;
+
+int get_len(int num) {
+    int ret = 0;
+    while (num) {
+        num /= 10;
+        ret++;
+    }
+    return ret;
+}
+
+int get_number(char *str, int len) {
+    int ret = 0;
+    for (int i = 0; i < len; ++i) {
+        ret = ret * 10 + str[i] - '0';
+    }
+    return ret;
+}
+
 int main(int argc, char *argv[]) {
     open();
 
-    char in[10]; int k, len = 0, flag = 1, c[256]{};
-    scanf(" %s %d", in, &k);
-    while (in[len]) {
-        if (c[in[len]]) flag = 0;
-        c[in[len]] = 1;
-        len++;
-    }
-    if (len == 1) return !printf("-1\n");
+    scanf("%d %d", &n, &k);
+    m = get_len(n);
 
-    int idx = 0;
-    while (k) {
-        int p = 0, v = -1;
-        for (int i = len - 1; i >= idx; --i) {
-            if (in[i] > v + '0') {
-                p = i;
-                v = in[i] - '0';
+    queue <int> q[2];
+    v[n][0] = 1; q[0].push(n);
+    
+    for (int i = 0; i < k; ++i) {
+        int turn = i % 2;
+        while (!q[turn].empty()) {
+            int cur = q[turn].front();
+            q[turn].pop();
+            
+            char nstr[10]{};
+            for (int j = m - 1; j >= 0; --j) {
+                nstr[j] = (cur % 10) + '0';
+                cur /= 10;
+            }
+            
+            for (int j = 0; j < m - 1; ++j) {
+                for (int l = j + 1; l < m; ++l) {
+                    if (j == 0 && nstr[l] == '0') continue;
+                    swap(nstr[j], nstr[l]);
+                    int number = get_number(nstr, m);
+                    swap(nstr[j], nstr[l]);
+                    if (v[number][1 - turn]) continue;
+                    q[1 - turn].push(number);
+                    v[number][1 - turn] = 1;
+                }
             }
         }
-        if (p == idx) {
-            if (k % 2 && flag) {
-                swap(in[len - 1], in[len - 2]);
-            }
+    }
+
+    int mx = -1, f = k % 2;
+    for (int i = 1000000; i > 0; --i) {
+        if (v[i][f]) {
+            mx = i;
             break;
         }
-        else {
-            swap(in[idx], in[p]);
-            idx++;
-        }
-        k--;
     }
-    printf("%s\n", in);
+
+    if (!f && mx == n && m == 2 && n % 10 == 0) mx = -1;
+    else if (m == 1) mx = -1;
+    printf("%d\n", mx);
 
     close();
     return 0;
