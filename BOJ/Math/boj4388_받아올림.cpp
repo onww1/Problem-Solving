@@ -63,20 +63,23 @@ const ldb ERR = 1e-10;
 const int move_r[] = {-1, 0, 1, 0, -1, -1, 1, 1};
 const int move_c[] = {0, -1, 0, 1, -1, 1, -1, 1};
 
-char a[20], b[20];
-
 int main(int argc, char *argv[]) {
     open();
 
     while (1) {
-        memset(a, 0, sizeof(a));
-        memset(b, 0, sizeof(b));
+        char a[20]{}, b[20]{};
         scanf(" %s %s", a, b);
         if (a[0] == '0' && b[0] == '0') break;
-        int cnt = 0, n = 0;
-        while (a[n]) n++;
-        reverse(a, a + n);
-        reverse(b, b + n);
+        int cnt = 0, an = 0, bn = 0;
+        while (a[an]) an++;
+        while (b[bn]) bn++;
+        reverse(a, a + an);
+        reverse(b, b + bn);
+
+        for (int i = an; i < bn; ++i) a[i] = '0';
+        for (int i = bn; i < an; ++i) b[i] = '0';
+        int n = max(an, bn);
+        a[n] = b[n] = '0';
 
         for (int i = 0; i < n; ++i) {
             a[i] += b[i] - '0';
