@@ -88,6 +88,9 @@ int main(int argc, char *argv[]) {
         ansb[bl++] = b[i];
     }
 
+    while (al > 1 && ansa[al - 1] == '0') ansa[--al] = 0;
+    while (bl > 1 && ansb[bl - 1] == '0') ansb[--bl] = 0;
+
     reverse(ansa, ansa + al);
     reverse(ansb, ansb + bl);
 
