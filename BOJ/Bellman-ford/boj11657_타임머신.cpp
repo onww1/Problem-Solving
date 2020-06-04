@@ -1,42 +1,105 @@
+#pragma GCC optimize("O3")
+#pragma GCC optimize("Ofast")
+#pragma GCC optimize("unroll-loops")
+#include <algorithm>
+#include <functional>
+#include <iostream>
+#include <string>
+#include <unordered_set>
+#include <unordered_map>
+#include <cmath>
+#include <ctime>
 #include <cstdio>
 #include <cstring>
+#include <cstdlib>
 #include <vector>
-#include <algorithm>
-using namespace std;
-typedef pair<int, int> pii;
-typedef pair<pii, int> piii;
-const int MAX = 500;
-const int INF = 0x7f7f7f7f;
+#include <queue>
+#include <deque>
+#include <stack>
+#include <map>
+#include <set>
+#define X first
+#define Y second
 
-int N, M, dist[MAX + 1];
-vector <piii> edges;
+#ifdef NON_SUBMIT
+#define TEST(n) (n)
+#else
+#define TEST(n) ((void)0)
+#endif
+
+#pragma warning(disable:4996)
+using namespace std;
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef double db;
+typedef long double ldb;
+typedef pair <int, int> pii;
+typedef pair <ll, ll> pll;
+typedef pair <ll, int> pli;
+typedef pair <int, pii> piii;
+typedef tuple <int, int, int> ti3;
+
+clock_t start_time, end_time;
+
+void open() {
+    TEST(freopen("input.txt", "r", stdin));
+    TEST(freopen("output.txt", "w", stdout));
+    TEST(freopen("debug.txt", "w", stderr));
+    TEST(start_time = clock());
+}
+
+void close() {
+    TEST(end_time = clock());
+    TEST(printf("Total time : %Lf seconds\n", (long double)(end_time - start_time) / CLOCKS_PER_SEC));
+}
+
+const int MAX = 1e5 + 1;
+const int MOD = 1e9 + 7;
+const int INF = 0x3f3f3f3f;
+const ll LL_INF = 0x3f3f3f3f3f3f3f3fLL;
+const db PI = acos(-1);
+const ldb ERR = 1e-10;
+const int move_r[] = {-1, 0, 1, 0, -1, -1, 1, 1};
+const int move_c[] = {0, -1, 0, 1, -1, 1, -1, 1};
+
+int n, m, u, v, w;
+ll dist[501];
+vector<ti3> edges;
 
 int main(int argc, char *argv[]) {
-	int u, v, w;
-	scanf("%d %d", &N, &M);
-	for (int i = 0; i < M; ++i) {
-		scanf("%d %d %d", &u, &v, &w);
-		edges.push_back({ {u,v},w });
-	}
+    open();
 
-	memset(dist, 0x7f, sizeof(dist));
-	dist[1] = 0;
+    scanf("%d %d", &n, &m);
+    for (int i = 0; i < m; ++i) {
+        scanf("%d %d %d", &u, &v, &w);
+        edges.push_back({u, v, w});
+    }
+    
+    memset(dist, 0x3f, sizeof(dist));
+    dist[1] = 0;
 
-	bool valid = true;
-	for (int i = 1; i <= N; ++i) {
-		for (piii edge : edges) {
-			if (dist[edge.first.first] != INF && dist[edge.first.second] > dist[edge.first.first] + edge.second) {
-				dist[edge.first.second] = dist[edge.first.first] + edge.second;
-				if (i == N) {
-					valid = false;
-					break;
-				}
-			}
-		}
-	}
+    for (int i = 1; i < n; ++i) {
+        for (ti3& edge: edges) {
+            tie(u, v, w) = edge;
+            if (dist[u] != LL_INF && dist[v] > dist[u] + w) 
+                dist[v] = dist[u] + w;
+        }
+    }
 
-	if (!valid) puts("-1");
-	else 
-		for (int i = 2; i <= N; ++i) printf("%d\n", dist[i] == INF ? -1 : dist[i]);
-	return !printf("\n");
+    bool valid = true;
+    for (ti3& edge: edges) {
+        tie(u, v, w) = edge;
+        if (dist[u] != LL_INF && dist[v] > dist[u] + w)
+            valid = false;
+    }
+
+    if (valid) 
+        for (int i = 2; i <= n; ++i)
+            printf("%lld\n", dist[i] == LL_INF ? -1 : dist[i]);
+    else
+        printf("-1\n");
+
+    close();
+    return 0;
 }
