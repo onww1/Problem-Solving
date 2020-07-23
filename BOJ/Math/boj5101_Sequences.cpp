@@ -1,9 +1,14 @@
+#pragma GCC optimize("O3")
+#pragma GCC optimize("Ofast")
+#pragma GCC optimize("unroll-loops")
 #include <algorithm>
 #include <functional>
 #include <iostream>
+#include <string>
 #include <unordered_set>
 #include <unordered_map>
 #include <cmath>
+#include <ctime>
 #include <cstdio>
 #include <cstring>
 #include <cstdlib>
@@ -32,15 +37,24 @@ typedef long double ldb;
 typedef pair <int, int> pii;
 typedef pair <ll, ll> pll;
 typedef pair <ll, int> pli;
-typedef pair<int, pii> piii;
+typedef pair <int, pii> piii;
+typedef tuple <int, int, int> ti3;
+
+clock_t start_time, end_time;
 
 void open() {
     TEST(freopen("input.txt", "r", stdin));
     TEST(freopen("output.txt", "w", stdout));
     TEST(freopen("debug.txt", "w", stderr));
+    TEST(start_time = clock());
 }
 
-const int MAX = 1e5;
+void close() {
+    TEST(end_time = clock());
+    TEST(printf("Total time : %Lf seconds\n", (long double)(end_time - start_time) / CLOCKS_PER_SEC));
+}
+
+const int MAX = 1e5 + 1;
 const int MOD = 1e9 + 7;
 const int INF = 0x3f3f3f3f;
 const ll LL_INF = 0x3f3f3f3f3f3f3f3fLL;
@@ -49,17 +63,20 @@ const ldb ERR = 1e-10;
 const int move_r[] = {-1, 0, 1, 0, -1, -1, 1, 1};
 const int move_c[] = {0, -1, 0, 1, -1, 1, -1, 1};
 
+int a, d, v;
+
 int main(int argc, char *argv[]) {
     open();
-    
-    int A, B, C;
+
     while (1) {
-        scanf ("%d %d %d", &A, &B, &C);
-        if (!A && !B && !C) break;
-        if (B < 0) A *= -1, B *= -1, C *= -1;
-        if ((C - A) % B == 0) printf("%d\n", (C - A) / B + 1);
-        else puts("X");
+        scanf("%d %d %d", &a, &d, &v);
+        if (!a && !d && !v) break;
+        v -= a;
+        if (d < 0) d *= -1, v *= -1;
+        if (v < 0 || v % d > 0) puts("X");
+        else printf("%d\n", 1 + v / d);
     }
 
+    close();
     return 0;
 }
