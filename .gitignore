@@ -3,6 +3,7 @@
 *.class
 main
 main.cpp
+generator.cpp
 
 input.txt
 output.txt
