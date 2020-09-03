@@ -11,76 +11,108 @@
  *  그렇게 자신의 차례가 되었을 때, 저장된 인접한 노드들의 순서를 보고 자신의 순서를 정합니다.
  */
 
+#pragma GCC optimize("O3")
+#pragma GCC optimize("Ofast")
+#pragma GCC optimize("unroll-loops")
 #include <algorithm>
+#include <functional>
+#include <iostream>
+#include <string>
+#include <unordered_set>
+#include <unordered_map>
+#include <cmath>
+#include <ctime>
 #include <cstdio>
 #include <cstring>
+#include <cstdlib>
 #include <vector>
 #include <queue>
+#include <deque>
+#include <stack>
+#include <map>
+#include <set>
 #define X first
 #define Y second
+
+#ifdef NON_SUBMIT
+#define TEST(n) (n)
+#else
+#define TEST(n) ((void)0)
+#endif
+
+#pragma warning(disable:4996)
 using namespace std;
 
-const int MAX = 1000;
-int T, K, M, P, S, A[MAX + 1], indegree[MAX + 1];
-vector <int> edges[MAX + 1];
-vector <int> in[MAX + 1];
+typedef long long ll;
+typedef unsigned long long ull;
+typedef double db;
+typedef long double ldb;
+typedef pair <int, int> pii;
+typedef pair <ll, ll> pll;
+typedef pair <ll, int> pli;
+typedef pair <int, pii> piii;
+typedef tuple <int, int, int> ti3;
+
+clock_t start_time, end_time;
+
+void open() {
+    TEST(freopen("input.txt", "r", stdin));
+    TEST(freopen("output.txt", "w", stdout));
+    TEST(freopen("debug.txt", "w", stderr));
+    TEST(start_time = clock());
+}
+
+void close() {
+    TEST(end_time = clock());
+    TEST(printf("Total time : %Lf seconds\n", (long double)(end_time - start_time) / CLOCKS_PER_SEC));
+}
+
+const int MAX = 1e3 + 1;
+const int MOD = 1e9 + 7;
+const int INF = 0x3f3f3f3f;
+const ll LL_INF = 0x3f3f3f3f3f3f3f3fLL;
+const db PI = acos(-1);
+const ldb ERR = 1e-10;
+const int move_r[] = {-1, 0, 1, 0, -1, -1, 1, 1};
+const int move_c[] = {0, -1, 0, 1, -1, 1, -1, 1};
+
+int t, k, n, m, in[MAX], d[MAX], c[MAX];
+vector<int> edges[MAX];
 
 int main(int argc, char *argv[]) {
-  scanf("%d", &T);
-  while (T--) {
-    scanf("%d %d %d", &K, &M, &P);
+    open();
 
-    // 초기화
-    for (int node = 1; node <= M; ++node) {
-      edges[node].clear();
-      in[node].clear();
-      indegree[node] = A[node] = 0;
+    scanf("%d", &t);
+    while (t--) {
+        scanf("%d %d %d", &k, &n, &m);
+        for (int i = 0, u, v; i < m; ++i) {
+            scanf("%d %d", &u, &v);
+            edges[u].push_back(v);
+            in[v]++;
+        }
+        queue<int> q;
+        for (int i = 1; i <= n; ++i) if (!in[i]) {
+            d[i] = c[i] = 1;
+            q.push(i);
+        }
+        while (!q.empty()) {
+            int node = q.front(); q.pop();
+            if (c[node] > 1) d[node]++;
+            for (int next: edges[node]) {
+                if (--in[next] == 0) q.push(next);
+                if (d[next] < d[node]) {
+                    d[next] = d[node];
+                    c[next] = 1;
+                } else if (d[next] == d[node]) c[next]++;
+            }
+        }
+        printf("%d %d\n", k, d[n]);
+        for (int i = 1; i <= n; ++i) {
+            edges[i].clear();
+            in[i] = d[i] = c[i] = 0;
+        }
     }
-
-    // 간선을 저장하고, 들어오는 간선의 수를 세어줍니다.
-    for (int i = 0; i < P; ++i) {
-      int u, v;
-      scanf("%d %d", &u, &v);
-      edges[u].push_back(v);
-      indegree[v]++;
-    }
-
-    // 들어오는 간선이 없는 노드들을 큐에 넣고, 순서를 1로 놓습니다.
-    queue <int> Q;
-    for (int node = 1; node <= M; ++node) {
-      if (!indegree[node]) {
-        Q.push(node);
-        A[node] = 1;
-      }
-    }
-
-    S = 1;
-    while (!Q.empty()) {
-      int current = Q.front();
-      Q.pop();
-
-      // 자신에게 들어오는 간선이 존재하는 노드의 순서들을 정렬합니다.
-      sort(in[current].begin(), in[current].end(), greater<int>());
-
-      // 하나밖에 없으면 그것과 같고, 2개 이상이면서 가장 큰 수가 2개 이상이면 그 수보다 하나 큰 값, 
-      // 아니면 그 값과 같은 값이 됩니다.
-      if (in[current].size() == 1) A[current] = in[current][0];
-      else if (in[current].size() > 1) {
-        if (in[current][0] == in[current][1]) A[current] = in[current][0] + 1;
-        else A[current] = in[current][0];
-      } 
-      S = max(S, A[current]);
-
-      // 인접한 노드들에 대해서 indegree를 줄이고, 자신으 순서를 추가시킵니다.
-      for (int next : edges[current]) {
-        in[next].push_back(A[current]);
-        indegree[next]--;
-        if (!indegree[next]) Q.push(next);
-      }
-    }
-
-    printf("%d %d\n", K, S);
-  }
-
-  return 0;
+    return 0;
+    close();
 }
+
