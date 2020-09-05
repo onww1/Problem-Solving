@@ -132,11 +132,6 @@ int main(int argc, char *argv[]) {
         BCC.add_edge(u, v);
     }
     BCC.biconnected_component();
-
-    vector<int> gr;
-    for (int i = 0; i < BCC.bcc_count; ++i) 
-        if (BCC.bcc[i].size() > 1) 
-            gr.push_back(i);
     
     vector<int> group(n + 1, -1), component(n + 1, 0);
     for (int i = 0; i < BCC.bcc_count; ++i)
