@@ -5,6 +5,7 @@ struct SCC_Kosaraju {
 
     void init(int _size) {
         this->size = _size;
+        scc_count = 0;
         edges.clear(); redges.clear(); scc.clear();
         _stack.clear(); visit.clear(); group.clear();
         edges.resize(this->size + 1);

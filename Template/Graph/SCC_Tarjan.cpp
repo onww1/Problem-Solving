@@ -5,6 +5,9 @@ struct SCC_Tarjan {
 
     void init(int _size) {
         this->size = _size;
+        scc_count = visit_count = 0;
+        edges.clear(); scc.clear();
+        _stack.clear(); visit.clear(); group.clear();
         edges.resize(this->size + 1);
         visit.resize(this->size + 1, 0);
         group.resize(this->size + 1, -1);
