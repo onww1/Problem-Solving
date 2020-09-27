@@ -135,10 +135,15 @@ int main(int argc, char *argv[]) {
     sort(dist + 1, dist + n + 1, [](const Rank& a, const Rank& b) { return a.d[0] < b.d[0]; });
     memset(tree, 0x3f, sizeof(tree));
 
+    vector<pii> tmp;
     for (int i = 1; i <= n; ++i) {
+        if (dist[i].d[0] != dist[i - 1].d[0]) {
+            for (pii &p: tmp) update(1, 1, n, p.X, p.Y);
+            tmp.clear();
+        }
         int mn = query(1, 1, n, 1, dist[i].d[1] - 1);
         if (mn < dist[i].d[2]) nope[dist[i].idx] = 1;
-        update(1, 1, n, dist[i].d[1], dist[i].d[2]);
+        tmp.emplace_back(dist[i].d[1], dist[i].d[2]);
     }
 
     scanf("%d", &q);
