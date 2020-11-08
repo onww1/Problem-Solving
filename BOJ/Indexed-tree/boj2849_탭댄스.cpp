@@ -108,7 +108,6 @@ void update(int node, int start, int end, int idx) {
 
 int main(int argc, char *argv[]) {
     open();
-
     scanf("%d %d", &n, &q);
     init(1, 1, n);
     while (q--) {
@@ -116,7 +115,6 @@ int main(int argc, char *argv[]) {
         update(1, 1, n, p);
         printf("%d\n", tree[1].mx);
     }
-
     close();
     return 0;
 }
