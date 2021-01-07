@@ -56,7 +56,7 @@ void close() {
 
 const int MAX = 1e2 + 3;
 const int MOD = 1e9 + 7;
-const int INF = 0x3f3f3f3f;
+const int INF = 0x3f3f3f;
 const ll LL_INF = 0x3f3f3f3f3f3f3f3fLL;
 const db PI = acos(-1);
 const ldb ERR = 1e-10;
