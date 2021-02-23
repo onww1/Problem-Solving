@@ -57,7 +57,7 @@ public:
         return solve(0, n - 1, 0, m - 1, matrix, target);    
     }
 
-    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+    bool searchMatrixV3(vector<vector<int>>& matrix, int target) {
         int n = matrix.size();
         int m = matrix[0].size();
 
@@ -93,6 +93,22 @@ public:
                 return true;
         }
         
+        return false;
+    }
+
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        int n = matrix.size();
+        int m = matrix[0].size();
+
+        int row = 0, col = m - 1;
+        while (row < n && col >= 0) {
+            if (matrix[row][col] == target)
+                return true;
+            if (matrix[row][col] > target)
+                col--;
+            else
+                row++;
+        }
         return false;
     }
 
