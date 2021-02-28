@@ -47,17 +47,13 @@ public:
 
         vector<char> answer(S.length());
         int idx = 0;
-        for (int i = 0; i < S.length(); i += 2) {
-            if (count[idx].first == 0)
-                idx++;
-            answer[i] = count[idx].second;
-            count[idx].first--;
-        }
-        for (int i = 1; i < S.length(); i += 2) {
-            if (count[idx].first == 0)
-                idx++;
-            answer[i] = count[idx].second;
-            count[idx].first--;
+        for (int p = 0; p < 2; p++) {
+            for (int i = p; i < S.length(); i += 2) {
+                if (count[idx].first == 0)
+                    idx++;
+                answer[i] = count[idx].second;
+                count[idx].first--;
+            }
         }
         return string(answer.begin(), answer.end());
     }
