@@ -41,10 +41,9 @@ public:
 
 private:
     int solve(int sidx, int pidx, string& s, string& p, vector<vector<int>>& cache) {
-        if (sidx == s.length() && pidx == p.length()) {
+        if (sidx == s.length() && pidx == p.length()) 
             return 1;
-        }
-        if (pidx == p.length())
+        if (pidx == p.length()) 
             return 0;
         if (sidx == s.length()) {
             int rest = (int)p.length() - pidx;
