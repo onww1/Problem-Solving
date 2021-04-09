@@ -35,6 +35,25 @@ const int EMPTY = 0x7f7f7f7f;
 class Solution {
 public:
     int flipgame(vector<int>& fronts, vector<int>& backs) {
+        int n = fronts.size();
+        vector<int> maxCount(2001, 0);
+
+        for (int i = 0; i < n; i++) {
+            if (fronts[i] == backs[i]) {
+                maxCount[fronts[i]] = 2;
+            } else {
+                maxCount[fronts[i]] = max(maxCount[fronts[i]], 1);
+                maxCount[backs[i]] = max(maxCount[backs[i]], 1);
+            }
+        }
+
+        for (int i = 1; i <= 2000; i++)
+            if (maxCount[i] == 1)
+                return i;
+        return 0;
+    }
+
+    int flipgameV1(vector<int>& fronts, vector<int>& backs) {
         for (int i = 1; i <= 2000; i++) {
             int status = -1;
             for (int j = 0; j < fronts.size(); j++) {
