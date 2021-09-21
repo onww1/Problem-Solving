@@ -2,9 +2,11 @@
 
 *.class
 main
+main.go
 main.cpp
 generator.cpp
 kakao.cpp
+kakao2022.cpp
 
 input.txt
 output.txt
