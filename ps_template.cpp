@@ -23,12 +23,6 @@
 #define X first
 #define Y second
 
-#ifdef NON_SUBMIT
-#define TEST(n) (n)
-#else
-#define TEST(n) ((void)0)
-#endif
-
 #pragma warning(disable:4996)
 using namespace std;
 
@@ -42,21 +36,7 @@ typedef pair <ll, int> pli;
 typedef pair <int, pii> piii;
 typedef tuple <int, int, int> ti3;
 
-clock_t start_time, end_time;
-
-void open() {
-    TEST(freopen("input.txt", "r", stdin));
-    TEST(freopen("output.txt", "w", stdout));
-    TEST(freopen("debug.txt", "w", stderr));
-    TEST(start_time = clock());
-}
-
-void close() {
-    TEST(end_time = clock());
-    TEST(printf("Total time : %Lf seconds\n", (long double)(end_time - start_time) / CLOCKS_PER_SEC));
-}
-
-const int MAX = 1e6 + 1;
+const int MAX = 1e5 + 1;
 const int MOD = 1e9 + 7;
 const int INF = 0x3f3f3f3f;
 const ll LL_INF = 0x3f3f3f3f3f3f3f3fLL;
@@ -66,8 +46,7 @@ const int move_r[] = {-1, 0, 1, 0, -1, -1, 1, 1};
 const int move_c[] = {0, -1, 0, 1, -1, 1, -1, 1};
 
 int main(int argc, char *argv[]) {
-    open();
 
-    close();
+
     return 0;
 }
